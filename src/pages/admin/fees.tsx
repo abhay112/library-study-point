@@ -4,11 +4,11 @@ import { FaPlus } from "react-icons/fa";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
-import {  useDeleteEnquiryMutation } from "../../redux/api/enquiryAPI";
-import {  Fees } from "../../types/types";
+import { RootState } from "../../redux/store";
+// import {  useDeleteEnquiryMutation } from "../../redux/api/enquiryAPI";
+// import {  Fees } from "../../types/types";
 import { CustomError } from "../../types/api-types";
 import toast from "react-hot-toast";
 import { useGetFeesQuery } from "../../redux/api/feesAPI";
@@ -16,12 +16,10 @@ import { useGetFeesQuery } from "../../redux/api/feesAPI";
 interface DataType {
   avatar: ReactElement;
   name: string;
-  gender: string;
   mobile: number;
   shift: string;
   date:string;
   status: ReactElement;
-  manage: ReactElement;
 }
 
 const columns: Column<DataType>[] = [
@@ -59,10 +57,11 @@ const img2 = "https://w7.pngwing.com/pngs/4/736/png-transparent-female-avatar-gi
 
 const FeesPage = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const { data,isError,error,refetch } = useGetFeesQuery(user?._id, { refetchOnMountOrArgChange: true });
+  const userId = user?._id||"";
 
-  const [deleteQuery] = useDeleteEnquiryMutation();
-  const navigate = useNavigate();
+  const { data,isError,error } = useGetFeesQuery(userId, { refetchOnMountOrArgChange: true });
+
+  // const [deleteQuery] = useDeleteEnquiryMutation();
   const [rows, setRows] = useState<DataType[]>([]);
  
   if (isError) {
@@ -72,10 +71,9 @@ const FeesPage = () => {
 
   useEffect(() => {
     console.log("Data:", data);
-    console.log("Rows:", rows);
     if (data) {
       setRows(
-        data?.currentFees?.map((val: Fees) => ({
+        data?.currentFees?.map((val) => ({
           avatar: (<img style={{borderRadius: "80%", }} src={`${val?.gender === "Female" ? img2 : img}`} alt="Shoes"/>),
           name: val?.studentName,
           mobile: val?.mobile,
@@ -86,14 +84,14 @@ const FeesPage = () => {
       );
     }
   }, [data]);
-  const deleteHandler = async (id: string) => {
-    const res = await deleteQuery({
-      adminId: user?._id,
-      queryId: id,
-    });
-    console.log(res);
-   refetch();
-  };
+  // const deleteHandler = async (id: string) => {
+  //   const res = await deleteQuery({
+  //     adminId: userId,
+  //     queryId: id,
+  //   });
+  //   console.log(res);
+  //  refetch();
+  // };
   const Table = TableHOC<DataType>(
     columns,
     rows,

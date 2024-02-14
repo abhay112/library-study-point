@@ -40,6 +40,21 @@ export type Attendace = {
   };
   _id: string;
 };
+
+export type AttendanceDetails = {
+  studentId: string;
+  adminId: string;
+  studentName: string;
+  attendance: {
+    day: string;
+    idx1: number | null;
+    idx2: number | null;
+    isPresent: "Present" | "Not Present" | "Pending";
+    seatNumber: number;
+  };
+  _id: string;
+}
+
 export interface AttendanceFormData {
   idx1: number;
   idx2: number;
@@ -49,6 +64,7 @@ export type Fees = {
   adminId: string;
   studentName: string;
   mobile:number;
+  gender:string;
   fees: {
     date: string;
     day: string;
@@ -61,6 +77,7 @@ export type Fees = {
   _id: string;
 }
 
+
 export type Enquiry = {
   name: string;
   email: string;
@@ -71,6 +88,28 @@ export type Enquiry = {
   adminId: string;
   _id: string;
 };
+
+
+export type SeatLayout = {
+  _id: string;
+  rows: number;
+  columns: number;
+  matrix: number[][];
+  adminId: string;
+  filledSeats: FilledSeat[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+export type FilledSeat = {
+  day: string;
+  idx1: number;
+  idx2: number;
+  isPresent: "Present" | "Not Present" | "Pending";
+  studentId: string;
+  studentName: string;
+  _id: string;
+}
 export type ShippingInfo = {
   address: string;
   city: string;

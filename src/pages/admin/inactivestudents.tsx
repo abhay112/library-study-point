@@ -6,7 +6,7 @@ import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
 import { useSelector } from "react-redux";
 import { RootState, server } from "../../redux/store";
-import { useAllEnrolledStudentsQuery, useAllStudentsQuery } from "../../redux/api/studentAPI";
+import { useAllEnrolledStudentsQuery } from "../../redux/api/studentAPI";
 
 interface DataType {
   photo: ReactElement;
@@ -42,7 +42,8 @@ const columns: Column<DataType>[] = [
 
 const InActive = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const { isLoading, isError, error, data,refetch } = useAllEnrolledStudentsQuery(user?._id , { refetchOnMountOrArgChange: true });
+  const userId = user?._id||"";
+  const {  data } = useAllEnrolledStudentsQuery(userId, { refetchOnMountOrArgChange: true });
   console.log(data,user?._id,'student');
   const [rows, setRows] = useState<DataType[]>([]);
   useEffect(() => {

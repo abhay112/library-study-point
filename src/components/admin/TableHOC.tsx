@@ -9,14 +9,13 @@ import {
   useTable,
   TableOptions,
 } from "react-table";
-import { getCurrentDate } from "../../utils/features";
 
-function TableHOC<T extends Object>(
+function TableHOC<T extends object>(
   columns: Column<T>[],
   data: T[],
   containerClassname: string,
   heading: string,
-  date:string,
+  // date:string,
   showPagination: boolean = false
 ) {
   return function HOC() {
@@ -41,13 +40,13 @@ function TableHOC<T extends Object>(
       canNextPage,
       canPreviousPage,
     } = useTable(options, useSortBy, usePagination);
-    if(date){
-      date = getCurrentDate();
-    }
+    // if(date){
+    //   date = getCurrentDate();
+    // }
     return (
       <div className={containerClassname}>
         <h2 className="heading">{heading}</h2>
-        {date&&<p className="date">{date}</p>}
+        {/* {date&&<p className="date">{date}</p>} */}
 
         <table className="table" {...getTableProps()}>
           <thead>

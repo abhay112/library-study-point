@@ -1,52 +1,60 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import {  FormEvent, useEffect, useState } from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
-import { useCreateEnquiryMutation, useGetEnquiryQuery, useGetSingleEnquiryQuery, useUpdateEnquiryMutation } from "../../../redux/api/enquiryAPI";
+import { useGetSingleEnquiryQuery, useUpdateEnquiryMutation } from "../../../redux/api/enquiryAPI";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../../../redux/store";
 import { useLocation, useNavigate } from "react-router-dom";
 import { responseToast } from "../../../utils/features";
 
 const NewEnquiry = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const [adminId, setAdminId] = useState<string>(user?._id);
+  const userId = user?._id ||"";
   const navigate = useNavigate();
   const location = useLocation();
   const enquiryId = location.pathname.split('/').pop() || '';
-  const { data,isError,error,refetch } = useGetSingleEnquiryQuery({adminId:user?._id,id:enquiryId});
+  const { data } = useGetSingleEnquiryQuery({adminId:userId,id:enquiryId});
   console.log(data);
-
-  const { name, email, mobile, gender, shift,message } = data?.enquiries || {
+  const enquiry = data?.enquiries[0];
+  const {_id, name, email, mobile, gender, shift, message } = enquiry || {
+    _id:"",
     name: "",
     email: "",
     mobile: "",
-    gender:"",  
+    gender: "",  
     shift: "",
-    message:"",
+    message: "",
   };
-  console.log(name,email,mobile,gender,shift,message);
+  console.log(data);
   const [messageUpdate, setMessageUpdate] = useState<string>(message);
-  const [createEnquiry] = useCreateEnquiryMutation();
+  // const [createEnquiry] = useCreateEnquiryMutation();
   const [updateEnquiry] = useUpdateEnquiryMutation();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(messageUpdate);
     const formData ={
+        _id,
         name,
         email,
         mobile,
         gender,
         shift,
+        adminId:userId,
         message:messageUpdate,
     }
-    const res = await updateEnquiry({ adminId:user?._id,enquiryId:data?.enquiries?._id,formData:formData});
+    // const res = await updateEnquiry({ adminId:userId,enquiryId:data?.enquiries?._id||"",formData:formData});
+    const res = await updateEnquiry({
+      adminId: userId,
+      enquiryId: enquiryId,
+      formData: formData
+    });
     console.log(res);
     responseToast(res, navigate, "/admin/enquiry");
   }
   useEffect(() => {
-    if (data) {
-        setMessageUpdate(data?.enquiries?.message);
+    if (data && data.enquiries.length > 0) {
+      setMessageUpdate(data.enquiries[0]?.message || '');
     }
   }, [data]);
 

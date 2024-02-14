@@ -4,13 +4,14 @@ import { Link } from "react-router-dom";
 // import { Skeleton } from "../components/loader";
 // import ProductCard from "../components/product-card";
 import { useAllStudentsQuery } from "../redux/api/studentAPI";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../redux/store";
 // import { addToCart } from "../redux/reducer/cartReducer";
 // import { CartItem } from "../types/types";
 
 const Home = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const { data, isLoading, isError } = useAllStudentsQuery(user?._id);
+  const userId = user?._id||"";
+  const { data, isLoading, isError } = useAllStudentsQuery(userId);
   console.log(data,isLoading,isError);
   // const dispatch = useDispatch();
 

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
-  MessageResponse, NewSeatRequest,
+  MessageResponse, NewSeatRequest, SeatLayoutResponse,
 } from "../../types/api-types";
 
 export const seatAPI = createApi({
@@ -10,11 +10,11 @@ export const seatAPI = createApi({
   }),
   tagTypes: ["seats"],
   endpoints: (builder) => ({
-    getSeatLayout: builder.query<MessageResponse, string>({
+    getSeatLayout: builder.query<SeatLayoutResponse, string>({
       query: (id) => `fetchSeatLayout?id=${id}`,
       providesTags: ["seats"],
     }),
-    getFilledSeatLayout: builder.query<MessageResponse, string>({
+    getFilledSeatLayout: builder.query<SeatLayoutResponse, string>({
       query: () => `fetchFilledSeats`,
       providesTags: ["seats"],
     }),

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { AllAttendanceResponse, MessageResponse, UpdateAttendanceRequest,GetAttendanceRequest, CreateAttendanceRequest } from "../../types/api-types";
+import { AllAttendanceResponse, MessageResponse, UpdateAttendanceRequest,GetAttendanceRequest, CreateAttendanceRequest, SingleAttendaceResponse } from "../../types/api-types";
 
 export const attendanceAPI = createApi({
     reducerPath: "attendanceAPI",
@@ -15,7 +15,7 @@ export const attendanceAPI = createApi({
                 method: "GET",
             }),
         }),
-        getSingleStudentAllAttendace: builder.query<MessageResponse, GetAttendanceRequest>({
+        getSingleStudentAllAttendace: builder.query<SingleAttendaceResponse, GetAttendanceRequest>({
             query: ({studentId,adminId}) => ({
                 url: `${studentId}?id=${adminId}`,
                 method: "GET",

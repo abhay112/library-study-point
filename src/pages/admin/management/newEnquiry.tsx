@@ -1,21 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import {  FormEvent, useState } from "react";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useCreateEnquiryMutation } from "../../../redux/api/enquiryAPI";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { responseToast } from "../../../utils/features";
 
 const NewEnquiry = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
+  const userId = user?._id ||"";
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [mobile, setMobile] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [shift, setShift] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [adminId, setAdminId] = useState<string>(user?._id);
+  // const [adminId, setAdminId] = useState<string>(userId);
 
   const [createEnquiry] = useCreateEnquiryMutation();
   const navigate = useNavigate();
@@ -34,9 +36,9 @@ const NewEnquiry = () => {
       gender,
       shift,
       message,
-      adminId,
+      adminId:userId,
     };
-    const res = await createEnquiry({ id: user?._id, formData:formData});
+    const res = await createEnquiry({ id: userId, formData:formData});
     console.log(res);
     responseToast(res, navigate, "/admin/enquiry");
   }

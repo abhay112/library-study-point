@@ -42,7 +42,8 @@ const columns: Column<DataType>[] = [
 
 const Students = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const { isLoading, isError, error, data,refetch } = useAllStudentsQuery(user?._id , { refetchOnMountOrArgChange: true });
+  const userId = user?._id||"";
+  const { data } = useAllStudentsQuery(userId , { refetchOnMountOrArgChange: true });
   console.log(data,user?._id,'student');
   const [rows, setRows] = useState<DataType[]>([]);
   useEffect(() => {

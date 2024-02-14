@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../../redux/store";
 import { useGetFilledSeatLayoutQuery, useGetSeatLayoutQuery } from "../../redux/api/seatAPI";
 import UserSidebar from "../../components/admin/UserSidebar";
 import { useCreateNewStudentAttendanceMutation } from "../../redux/api/attendanceAPI";
@@ -11,15 +11,15 @@ import { responseToast } from "../../utils/features";
 
 const UserSeats = () => {
     const { user } = useSelector((state: RootState) => state.userReducer);
+    const userId = user?._id||"";
     const [rows, setRows] = useState<number | "">("");
     const [columns, setColumns] = useState<number | "">("");
     const [matrix, setMatrix] = useState<number[][]>([]);
-    const [gridColors, setGridColors] = useState<string[][]>([]);
-    // const [createSeats, setCreateSeats] = useState<boolean>(false);
+
     const boardRef = useRef<HTMLDivElement>(null);
     const [submitted, setSubmitted] = useState<boolean>(false);
-    const { data, isError, error, isLoading } = useGetSeatLayoutQuery(user?._id, { refetchOnMountOrArgChange: true });
-    const fetchSeat = useGetFilledSeatLayoutQuery(user?._id, { refetchOnMountOrArgChange: true });
+    const { data } = useGetSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
+    const fetchSeat = useGetFilledSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
     console.log(fetchSeat?.currentData?.data?.filledSeats, 'fetchSeats');
     const navigate = useNavigate();
     const [createNewStudentAttendance] = useCreateNewStudentAttendanceMutation();
@@ -29,11 +29,8 @@ const UserSeats = () => {
             const newMatrix = Array.from({ length: Number(rows) }, () =>
                 Array.from({ length: Number(columns) }, () => 0)
             );
-            const newGridColors = Array.from({ length: Number(rows) }, () =>
-                Array.from({ length: Number(columns) }, () => "white")
-            );
+           
             setMatrix(newMatrix);
-            setGridColors(newGridColors);
             if (boardRef.current) {
                 boardRef.current.style.setProperty("--grid-rows", String(rows));
                 boardRef.current.style.setProperty("--grid-columns", String(columns));
@@ -86,7 +83,7 @@ const UserSeats = () => {
                 idx1:idx1,
                 idx2:idx2,
             }
-            const res = await createNewStudentAttendance({studentId:user?._id,formData});
+            const res = await createNewStudentAttendance({studentId:userId,formData});
             responseToast(res, navigate, "/user/attendance");
             console.log(res);
         }

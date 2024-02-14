@@ -4,12 +4,11 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../../redux/store";
 import {  useDeleteEnquiryMutation, useGetEnquiryQuery } from "../../redux/api/enquiryAPI";
 import { Enquiry } from "../../types/types";
-import { responseToast } from "../../utils/features";
 import { CustomError } from "../../types/api-types";
 import toast from "react-hot-toast";
 
@@ -18,9 +17,9 @@ interface DataType {
   name: string;
   email: string;
   gender: string;
-  mobile: number;
+  mobile: string; // Change type to string
   shift: string;
-  edit:ReactElement;
+  edit: ReactElement;
   delete: ReactElement;
 }
 
@@ -65,9 +64,10 @@ const img2 = "https://w7.pngwing.com/pngs/4/736/png-transparent-female-avatar-gi
 
 const Enquiry = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const { data,isError,error,refetch } = useGetEnquiryQuery(user?._id, { refetchOnMountOrArgChange: true });
+  const userId = user?._id||"";
+
+  const { data,isError,error,refetch } = useGetEnquiryQuery(userId, { refetchOnMountOrArgChange: true });
   const [deleteQuery] = useDeleteEnquiryMutation();
-  const navigate = useNavigate();
   const [rows, setRows] = useState<DataType[]>([]);
  
   if (isError) {
@@ -77,7 +77,6 @@ const Enquiry = () => {
 
   useEffect(() => {
     console.log("Data:", data);
-    console.log("Rows:", rows);
     if (data) {
       setRows(
         data?.enquiries?.map((val: Enquiry) => ({
@@ -97,7 +96,7 @@ const Enquiry = () => {
   }, [data]);
   const deleteHandler = async (id: string) => {
     const res = await deleteQuery({
-      adminId: user?._id,
+      adminId: userId,
       queryId: id,
     });
     console.log(res);

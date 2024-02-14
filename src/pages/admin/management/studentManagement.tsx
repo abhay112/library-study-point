@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
@@ -8,19 +7,13 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useDeleteStudentMutation, useStudentDetailsQuery, useUpdateStudentMutation } from "../../../redux/api/studentAPI";
 import { responseToast } from "../../../utils/features";
 
-interface RouteParams {
-  id: string;
-}
-
-const img =
-  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
 
 const StudentManagement = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const params = useParams<RouteParams>();
+  const params = useParams<{ id?: string }>();
   const id = params?.id || "";
   const navigate = useNavigate();
-  const { data, isLoading, isError,refetch } = useStudentDetailsQuery(id, { refetchOnMountOrArgChange: true });
+  const { data, isError,refetch } = useStudentDetailsQuery(id, { refetchOnMountOrArgChange: true });
   console.log(data);
   const { name, email, mobile, shift, feesAmount, active, photo } = data?.student || {
     photo: "",

@@ -24,11 +24,7 @@ import UserFeesPage from './pages/users/fees';
 import UserAttendanceManagement from './pages/users/management/attendancemanagement';
 
 const Home = lazy(() => import("./pages/home"));
-const Search = lazy(() => import("./pages/search"));
-const Cart = lazy(() => import("./pages/cart"));
-const Shipping = lazy(() => import("./pages/shipping"));
 const Login = lazy(() => import("./pages/login"));
-const Orders = lazy(() => import("./pages/orders"));
 
 const Loader = lazy(() => import("./components/loader"));
 const Header = lazy(() => import("./components/header"));
@@ -92,26 +88,13 @@ const App = () => {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/cart" element={<Cart />} />
           <Route>
 
-            <Route path="/shipping" element={<Shipping />} />
             <Route path="/login" element={
               <ProtectedRoute isAuthenticated={user ? false : true}>
                 <Login />
               </ProtectedRoute>
             } />
-            {/* Logged In User Routes */}
-            <Route
-              element={<ProtectedRoute isAuthenticated={user ? true : false} />}
-            >
-              <Route path="/shipping" element={<Shipping />} />
-              <Route path="/orders" element={<Orders />} />
-              {/* <Route path="/order/:id" element={<OrderDetails />} />
-              <Route path="/pay" element={<Checkout />} /> */}
-            </Route>
-
           </Route>
 
           {/* //admin Rotues */}

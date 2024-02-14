@@ -1,13 +1,12 @@
 import { ReactElement, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Column } from "react-table";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../../../redux/store";
 import toast from "react-hot-toast";
 import { useGetAttendanceQuery, useUpdateAttendanceMutation } from "../../../redux/api/attendanceAPI";
 import TableHOC from "../../../components/admin/TableHOC";
 import { Attendace } from "../../../types/types";
-import { Skeleton } from "../../../components/loader";
 import { CustomError } from "../../../types/api-types";
 import { useGetFilledSeatLayoutQuery, useGetSeatLayoutQuery } from "../../../redux/api/seatAPI";
 import { FaEdit } from "react-icons/fa";
@@ -48,42 +47,43 @@ const attendanceColumns: Column<DataType>[] = [
 
 const SeatDetails = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const { isLoading, isError, error, data: attendanceData, refetch: attendaceRefech } = useGetAttendanceQuery(user?._id, { refetchOnMountOrArgChange: true });
+  const userId = user?._id||"";
+  const { isError, error, data: attendanceData, refetch: attendaceRefech } = useGetAttendanceQuery(userId, { refetchOnMountOrArgChange: true });
   const [updateAttendance] = useUpdateAttendanceMutation();
-  const navigate = useNavigate();
-  const attendance = attendanceData?.data;
   const [attendaceRows, setAttendaceRows] = useState<DataType[]>([]);
   const [rows, setRows] = useState<number | "">("");
   const [columns, setColumns] = useState<number | "">("");
   const [matrix, setMatrix] = useState<number[][]>([]);
   const boardRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const { data, refetch } = useGetSeatLayoutQuery(user?._id, { refetchOnMountOrArgChange: true });
-  const fetchSeat = useGetFilledSeatLayoutQuery(user?._id, { refetchOnMountOrArgChange: true });
-  const { refetch: filledSeatRefetch } = useGetFilledSeatLayoutQuery(user?._id, { refetchOnMountOrArgChange: true });
+  const { data, refetch } = useGetSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
+  const fetchSeat = useGetFilledSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
+  const { refetch: filledSeatRefetch } = useGetFilledSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
+  console.log(attendanceData)
   useEffect(() => {
-    if (attendanceData) {
+    if (attendanceData && attendanceData.data) {
       setAttendaceRows(
-        attendance?.map((val: Attendace) => ({
+        attendanceData?.data.map((val: Attendace) => ({
           photo: <img src={img2} alt="Shoes" />,
-          name: val?.studentName.split(' ')[0],
-          seat: val?.latestAttendance?.seatNumber ? val?.latestAttendance?.seatNumber : <span className="grey">----</span>,
-          status: val?.latestAttendance?.isPresent === "Present" ? <span className="green">Present</span> : val?.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> : <span className="red">Absent</span>,
-          action: val?.latestAttendance?.isPresent === "Pending" ?
+          name: val.studentName.split(' ')[0],
+          seat: val.latestAttendance?.seatNumber ? val.latestAttendance?.seatNumber : NaN, // Ensure seat is always a number
+          status: val.latestAttendance?.isPresent === "Present" ? <span className="green">Present</span> : val.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> : <span className="red">Absent</span>,
+          action: val.latestAttendance?.isPresent === "Pending" ?
             <Link to={`/admin/seats`}
-              onClick={() => { updateHandler(val?.adminId, val?.studentId) }} >Accept
+              onClick={() => { updateHandler(val.adminId, val.studentId) }} >Accept
             </Link>
             : <Link
               to={{
-                pathname: `/admin/attendance/${val?.studentId}`,
+                pathname: `/admin/attendance/${val.studentId}`,
               }}
             >
               Manage
             </Link>
         }))
-      )
+      );
     }
   }, [attendanceData]);
+
   useEffect(() => {
     if (rows !== "" && columns !== "") {
       const newMatrix = Array.from({ length: Number(rows) }, () =>
@@ -95,6 +95,7 @@ const SeatDetails = () => {
         boardRef.current.style.setProperty("--grid-columns", String(columns));
       }
     }
+    console.log(data);
     if (data) {
       setMatrix(data?.data?.matrix);
       setSubmitted(true);
@@ -150,7 +151,6 @@ const SeatDetails = () => {
     attendaceRows,
     "dashboard-product-box",
     "Attendance",
-    "date",
     attendaceRows.length > 6
   )();
   const updateHandler = async (adminId: string, studentId: string) => {

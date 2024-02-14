@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactElement, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Column } from "react-table";
 import TableHOC from "../../../components/admin/TableHOC";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../../../redux/store";
 import { useGetSingleStudentAllAttendaceQuery } from "../../../redux/api/attendanceAPI";
 import { Skeleton } from "../../../components/loader";
 import { CustomError } from "../../../types/api-types";
@@ -11,12 +13,19 @@ import toast from "react-hot-toast";
 import UserSidebar from "../../../components/admin/UserSidebar";
 
 interface DataType {
-  inTiming: ReactElement;
-  outTiming: string;
+  inTiming?: ReactElement;
+  outTiming?: string;
   day: string;
   seat: number | ReactElement;
   status: ReactElement;
   action: ReactElement;
+}
+interface AttendanceEntry {
+  day: string | null;
+  idx1: number | null;
+  idx2: number | null;
+  isPresent: "Present" | "Not Present" | "Pending" | null;
+  seatNumber: number | null;
 }
 
 const img2 = "https://toppng.com/uploads/preview/cool-avatar-transparent-image-cool-boy-avatar-11562893383qsirclznyw.png";
@@ -52,13 +61,14 @@ const UserAttendanceManagement = () => {
   const location = useLocation();
   const studentId = location.pathname.split('/').pop() || '';
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const { isLoading, isError, error, data, refetch } = useGetSingleStudentAllAttendaceQuery({ adminId: user?._id, studentId: studentId });
+  const userId=user?._id||""
+  const { isLoading, isError, error, data, refetch } = useGetSingleStudentAllAttendaceQuery({ adminId: userId, studentId: studentId });
 
   const updateHandler = async (adminId: string, studentId: string) => {
     // Implement your update logic here
     // For example, you can call the update API
     // const res = await updateAttendance({ adminId, studentId });
-    // console.log(res);
+    console.log(adminId,studentId);
     refetch();
   };
 
@@ -68,45 +78,51 @@ const UserAttendanceManagement = () => {
     columns,
     rows,
     "dashboard-product-box",
-    data?.data?.studentName,
+    data?.data?.studentName || "",
     rows.length > 6
   )();
 
   useEffect(() => {
     if (data) {
-      setRows(
-        data.data?.attendance.map((entry) => ({
-          photo: <img src={img2} alt="Shoes" />,
-          name: data.data?.studentName || "",
-          day: entry.day || "",
-          seat: entry.seatNumber || <span className="grey">----</span>,
-          status: entry.isPresent === "Present" ? (
-            <span className="green">Present</span>
-          ) : entry.isPresent === "Pending" ? (
-            <span className="purple">Pending</span>
-          ) : (
-            <span className="red">Absent</span>
-          ),
-          action: entry.isPresent === "Pending" ? (
-            <Link
-              to={`/user/attendance`}
-              onClick={() => {
-                updateHandler(data.data?.adminId || "", data.data?.studentId || "");
-              }}
-            >
-              Accept
-            </Link>
-          ) : (
-            <Link
-              to={{
-                pathname: `/user/attendance/${data.data?.studentId}`,
-              }}
-            >
-              Manage
-            </Link>
-          ),
-        }))
-      );
+      if (Array.isArray(data.data.attendance)) {
+        const attendance: AttendanceEntry[] = data.data.attendance || [];
+        console.log(data.data.attendance)
+        console.log(attendance)
+        setRows(
+         attendance.map((entry) => ({
+            photo: <img src={img2} alt="Shoes" />,
+            name: data.data?.studentName || "",
+            day: entry.day || "",
+            seat: entry.seatNumber || <span className="grey">----</span>,
+            status: entry.isPresent === "Present" ? (
+              <span className="green">Present</span>
+            ) : entry.isPresent === "Pending" ? (
+              <span className="purple">Pending</span>
+            ) : (
+              <span className="red">Absent</span>
+            ),
+            action: entry.isPresent === "Pending" ? (
+              <Link
+                to={`/user/attendance`}
+                onClick={() => {
+                  updateHandler(data.data?.adminId || "", data.data?.studentId || "");
+                }}
+              >
+                Accept
+              </Link>
+            ) : (
+              <Link
+                to={{
+                  pathname: `/user/attendance/${data.data?.studentId}`,
+                }}
+              >
+                Manage
+              </Link>
+            ),
+          }))
+        );
+      }
+    
     }
   }, [data]);
 

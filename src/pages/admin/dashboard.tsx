@@ -155,25 +155,25 @@ const WidgetItem = ({
   </article>
 );
 
-interface CategoryItemProps {
-  color: string;
-  value: number;
-  heading: string;
-}
+// interface CategoryItemProps {
+//   color: string;
+//   value: number;
+//   heading: string;
+// }
 
-const CategoryItem = ({ color, value, heading }: CategoryItemProps) => (
-  <div className="category-item">
-    <h5>{heading}</h5>
-    <div>
-      <div
-        style={{
-          backgroundColor: color,
-          width: `${value}%`,
-        }}
-      ></div>
-    </div>
-    <span>{value}%</span>
-  </div>
-);
+// const CategoryItem = ({ color, value, heading }: CategoryItemProps) => (
+//   <div className="category-item">
+//     <h5>{heading}</h5>
+//     <div>
+//       <div
+//         style={{
+//           backgroundColor: color,
+//           width: `${value}%`,
+//         }}
+//       ></div>
+//     </div>
+//     <span>{value}%</span>
+//   </div>
+// );
 
 export default Dashboard;

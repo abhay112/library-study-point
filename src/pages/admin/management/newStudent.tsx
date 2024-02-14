@@ -3,20 +3,20 @@ import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useNavigate } from "react-router-dom";
 import { responseToast } from "../../../utils/features";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../../../redux/store";
 import { useNewStudentMutation } from "../../../redux/api/studentAPI";
 
 const NewStudent = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-
-  const [name, setName] = useState<string>("abhay1");
-  const [email, setEmail] = useState<string>("abhay1@gmail.com");
-  const [mobile, setMobile] = useState<number>(9876598765);
-  const [shift, setShift] = useState<string>("Morning");
-  const [feesAmount, setFeesAmount] = useState<number>(500);
+  const userId = user?._id || ""
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [mobile, setMobile] = useState<string>("");
+  const [shift, setShift] = useState<string>("");
+  const [feesAmount, setFeesAmount] = useState<number | null>(null);
   const [photoPrev, setPhotoPrev] = useState<string>("");
   const [photo, setPhoto] = useState<File>();
-  
+
 
   const [newStudent] = useNewStudentMutation();
 
@@ -37,25 +37,25 @@ const NewStudent = () => {
       };
     }
   };
-  console.log(photo,'photo')
+  console.log(photo, 'photo')
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name || !email || !shift || !feesAmount || !photo){
+    if (!name || !email || !shift || !feesAmount || !photo) {
       if (mobile !== undefined && mobile !== null && mobile.toString().length < 10) {
-         return;
+        return;
       }
     }
     const formData = new FormData();
 
     formData.set("name", name);
-    formData.set("email",email);
-    formData.set("mobile" ,mobile?.toString() || '');
+    formData.set("email", email);
+    formData.set("mobile", mobile?.toString() || '');
     formData.set("shift", shift);
     formData.set("feesAmount", feesAmount?.toString() || '');
-    formData.set("photo", photo||'');
+    formData.set("photo", photo || '');
 
-    const res = await newStudent({ id: user?._id, formData });
+    const res = await newStudent({ id: userId, formData });
     console.log(res);
     responseToast(res, navigate, "/admin/students");
   };
@@ -65,7 +65,7 @@ const NewStudent = () => {
       <AdminSidebar />
       <main className="product-management">
         <article>
-        <form onSubmit={submitHandler}>
+          <form onSubmit={submitHandler}>
             <h2>New Student</h2>
             <div>
               <label>Name</label>
@@ -93,7 +93,7 @@ const NewStudent = () => {
                 value={mobile === undefined ? '' : mobile}
                 onChange={(e) => {
                   const input = e.target.value;
-                  setMobile(input === '' || isNaN(Number(input)) ? undefined : Number(input));
+                  setMobile(input === '' || isNaN(Number(input)) ? "" : input);
                 }}
               />
             </div>
@@ -111,10 +111,10 @@ const NewStudent = () => {
               <input
                 type="number"
                 placeholder="Fees"
-                value={feesAmount === undefined ? '' : feesAmount}
+                value={feesAmount === null ? '' : feesAmount} // Adjusted to check for null explicitly
                 onChange={(e) => {
                   const input = e.target.value;
-                  setFeesAmount(input === '' || isNaN(Number(input)) ? undefined : Number(input));
+                  setFeesAmount((input === '' || isNaN(Number(input))) ? null : Number(input)); // Change undefined to null
                 }}
               />
             </div>

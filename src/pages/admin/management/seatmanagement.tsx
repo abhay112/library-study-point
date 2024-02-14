@@ -1,12 +1,11 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
 import { MdOutlineDoneOutline } from "react-icons/md";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useCreateSeatMutation, useGetSeatLayoutQuery } from "../../../redux/api/seatAPI";
 import { responseToast } from "../../../utils/features";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../../../redux/store";
 // import SeatLayoutHOC from "../../components/admin/SeatLayoutHOC";
 
 const SeatsManagement = () => {
@@ -20,7 +19,9 @@ const SeatsManagement = () => {
     const [submitted, setSubmitted] = useState<boolean>(false);
     // const [seatsMatrix, setSeatsMatrix] = useState<number[][]>([]);
     const [createSeats] = useCreateSeatMutation();
-    const { data, isError, error, isLoading } = useGetSeatLayoutQuery(user?._id, { refetchOnMountOrArgChange: true });
+    const userId = user?._id ?? "";
+
+    const { data, isLoading } = useGetSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -108,11 +109,9 @@ const SeatsManagement = () => {
             columns,
             matrix,
         }
-        const res = await createSeats({ adminId: user?._id, formData: formData });
+        const res = await createSeats({ adminId: userId, formData: formData });
         responseToast(res, navigate, "/admin/seats");
     };
-    const img = "https://png.pngtree.com/png-vector/20220814/ourmid/pngtree-cinema-seat-png-image_6110496.png"
-    const img2 = "https://png.pngtree.com/png-vector/20190625/ourmid/pngtree-car-seat-png-image_1511320.jpg"
 
     const seatingArrangement = () => {
         if (!matrix.length) return null;
@@ -196,7 +195,10 @@ const SeatsManagement = () => {
                             {seatingArrangement()}
                         </div>
                     )}
-                    {!submitted && <button onClick={handleSubmit}>Submit</button>}
+                    {/* {!submitted && <button type="submit" onClick={handleSubmit}>Submit</button>} */}
+                    <form onSubmit={handleSubmit}>
+                        {!submitted && <button type="submit">Submit</button>}
+                    </form>
                 </main>}
             {submitted && <Link to="/admin/seats/new" className="create-product-btn">
                 <MdOutlineDoneOutline onClick={() => setSubmitted(false)} />

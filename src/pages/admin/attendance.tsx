@@ -1,10 +1,10 @@
 import { ReactElement, useEffect, useState } from "react";
-import { Link,  useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../../redux/store";
 import { useGetAttendanceQuery, useUpdateAttendanceMutation } from "../../redux/api/attendanceAPI";
 import { Attendace } from "../../types/types";
 import { Skeleton } from "../../components/loader";
@@ -51,9 +51,9 @@ const columns: Column<DataType>[] = [
 ];
 
 const Attendance = () => {
-  const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const { isLoading, isError, error, data, refetch } = useGetAttendanceQuery(user?._id, { refetchOnMountOrArgChange: true });
+  const userId = user?._id  ??  "";
+  const { isLoading, isError, error, data, refetch } = useGetAttendanceQuery(userId, { refetchOnMountOrArgChange: true });
   console.log(data);
   const [updateAttendance] = useUpdateAttendanceMutation();
   const updateHandler = async (adminId: string, studentId: string) => {
@@ -61,10 +61,9 @@ const Attendance = () => {
       adminId: adminId,
       studentId: studentId,
     });
-    console.log(res)
+    console.log(res);
     refetch();
   };
-  const attendance = data?.data;
   const [rows, setRows] = useState<DataType[]>([]);
   const Table = TableHOC<DataType>(
     columns,
@@ -76,26 +75,29 @@ const Attendance = () => {
 
   useEffect(() => {
     if (data) {
-      setRows(
-        attendance?.map((val: Attendace) => ({
-          photo: <img src={img2} alt="Shoes" />,
-          name: val?.studentName,
-          day: val?.latestAttendance?.day,
-          seat: val?.latestAttendance?.seatNumber ? val?.latestAttendance?.seatNumber : <span className="grey">----</span>,
-          status: val?.latestAttendance?.isPresent === "Present" ? <span className="green">Present</span> : val?.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> : <span className="red">Absent</span>,
-          action: val?.latestAttendance?.isPresent === "Pending" ?
-            <Link to={`/admin/attendance`}
-              onClick={() => { updateHandler(val?.adminId, val?.studentId) }} >Accept
-            </Link>
-            : <Link
-              to={{
-                pathname: `/admin/attendance/${val?.studentId}`,
-              }}
-            >
-              Manage
-            </Link>
-        }))
-      )
+      if (data.data) {
+        setRows(
+          (data?.data || []).map((val: Attendace) => ({
+            photo: <img src={img2} alt="Shoes" />,
+            name: val?.studentName || "",
+            day: val?.latestAttendance?.day || "",
+            seat: typeof val?.latestAttendance?.seatNumber === "number" ? val.latestAttendance.seatNumber : 0, 
+            status: val?.latestAttendance?.isPresent === "Present" ? <span className="green">Present</span> : val?.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> : <span className="red">Absent</span>,
+            action: val?.latestAttendance?.isPresent === "Pending" ?
+              <Link to={`/admin/attendance`}
+                onClick={() => { updateHandler(val?.adminId, val?.studentId) }} >Accept
+              </Link>
+              : <Link
+                to={{
+                  pathname: `/admin/attendance/${val?.studentId}`,
+                }}
+              >
+                Manage
+              </Link>
+          }))
+        )
+      }
+   
     }
   }, [data]);
 

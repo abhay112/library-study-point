@@ -12,6 +12,8 @@ import {
   Enquiry,
   Fees,
   AttendanceFormData,
+  AttendanceDetails,
+  SeatLayout,
 } from "./types";
 
 export type CustomError = {
@@ -25,6 +27,18 @@ export type CustomError = {
 export type MessageResponse = {
   success: boolean;
   message: string;
+};
+export type SeatLayoutResponse={
+  success: boolean;
+  data:SeatLayout;
+}
+export type SeatLayoutFilledResponse={
+  success: boolean;
+  data:SeatLayout;
+}
+export type SingleAttendaceResponse = {
+  success: boolean;
+  data: AttendanceDetails;
 };
 
 export type AllUsersResponse = {
@@ -43,15 +57,15 @@ export type AllStudentsResponse = {
 };
 export type AllAttendanceResponse = {
   success: boolean;
-  attendance: Attendace[];
+  data: Attendace[];
 };
 export type AllFeesResponse = {
   success: boolean;
-  attendance: Fees[];
+  currentFees: Fees[];
 };
 export type AllEnquiryResponse = {
   success: boolean;
-  enquiry: Enquiry[];
+  enquiries: Enquiry[];
 };
 export type GetSingleEnquiryRequest = {
   adminId: string;
@@ -60,7 +74,7 @@ export type GetSingleEnquiryRequest = {
 export type UpdatetEnquiryRequest = {
   adminId: string;
   enquiryId: string;
-  formData: Enquiry[];
+  formData: Enquiry;
 };
 
 export type UpdateAttendanceRequest = {
