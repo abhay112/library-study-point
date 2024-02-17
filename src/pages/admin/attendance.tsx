@@ -51,9 +51,9 @@ const columns: Column<DataType>[] = [
 ];
 
 const Attendance = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id  ??  "";
-  const { isLoading, isError, error, data, refetch } = useGetAttendanceQuery(userId, { refetchOnMountOrArgChange: true });
+  const { admin } = useSelector((state: RootState) => state.adminReducer);
+  const adminId = admin?._id  ??  "";
+  const { isLoading, isError, error, data, refetch } = useGetAttendanceQuery(adminId, { refetchOnMountOrArgChange: true });
   console.log(data);
   const [updateAttendance] = useUpdateAttendanceMutation();
   const updateHandler = async (adminId: string, studentId: string) => {
@@ -79,7 +79,7 @@ const Attendance = () => {
         setRows(
           (data?.data || []).map((val: Attendace) => ({
             photo: <img src={img2} alt="Shoes" />,
-            name: val?.studentName || "",
+            name: val?.studentName.split(' ')[0] || "",
             day: val?.latestAttendance?.day || "",
             seat: typeof val?.latestAttendance?.seatNumber === "number" ? val.latestAttendance.seatNumber : 0, 
             status: val?.latestAttendance?.isPresent === "Present" ? <span className="green">Present</span> : val?.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> : <span className="red">Absent</span>,

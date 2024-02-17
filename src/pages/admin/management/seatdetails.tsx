@@ -10,6 +10,8 @@ import { Attendace } from "../../../types/types";
 import { CustomError } from "../../../types/api-types";
 import { useGetFilledSeatLayoutQuery, useGetSeatLayoutQuery } from "../../../redux/api/seatAPI";
 import { FaEdit } from "react-icons/fa";
+import { LuRefreshCcw } from "react-icons/lu";
+import RefreshBtn from "../../../components/refreshBtn";
 
 interface DataType {
   photo: ReactElement;
@@ -46,9 +48,9 @@ const attendanceColumns: Column<DataType>[] = [
 ];
 
 const SeatDetails = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id||"";
-  const { isError, error, data: attendanceData, refetch: attendaceRefech } = useGetAttendanceQuery(userId, { refetchOnMountOrArgChange: true });
+  const { admin } = useSelector((state: RootState) => state.adminReducer);
+  const adminId = admin?._id||"";
+  const { isError, error, data: attendanceData, refetch: attendaceRefech } = useGetAttendanceQuery(adminId, { refetchOnMountOrArgChange: true });
   const [updateAttendance] = useUpdateAttendanceMutation();
   const [attendaceRows, setAttendaceRows] = useState<DataType[]>([]);
   const [rows, setRows] = useState<number | "">("");
@@ -56,9 +58,9 @@ const SeatDetails = () => {
   const [matrix, setMatrix] = useState<number[][]>([]);
   const boardRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const { data, refetch } = useGetSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
-  const fetchSeat = useGetFilledSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
-  const { refetch: filledSeatRefetch } = useGetFilledSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
+  const { data, refetch } = useGetSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
+  const {data:fetchSeat,refetch: filledSeatRefetch  } = useGetFilledSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
+  console.log(fetchSeat,data);
   console.log(attendanceData)
   useEffect(() => {
     if (attendanceData && attendanceData.data) {
@@ -107,7 +109,7 @@ const SeatDetails = () => {
   const seatingArrangement = () => {
     if (!matrix.length) return null;
     const html: JSX.Element[] = [];
-    const filledSeats = fetchSeat?.currentData?.data?.filledSeats || [];
+    const filledSeats = fetchSeat?.data?.filledSeats || [];
     for (let i = 0; i < Number(rows); i++) {
       const row: JSX.Element[] = [];
       for (let j = 0; j < Number(columns); j++) {
@@ -149,7 +151,7 @@ const SeatDetails = () => {
   const Table = TableHOC<DataType>(
     attendanceColumns,
     attendaceRows,
-    "dashboard-product-box",
+    "dashboard-attendace-box",
     "Attendance",
     attendaceRows.length > 6
   )();
@@ -166,26 +168,44 @@ const SeatDetails = () => {
     const err = error as CustomError;
     toast.error(err.data.message);
   }
+  // const [isRefreshing, setIsRefreshing] = useState(false);
+  // const handleBtnRefresh = () => {
+  //   setIsRefreshing(true);
+  //   setTimeout(() => {
+  //     setIsRefreshing(false);
+  //   }, 1000);
+  // };
+  const handleBtnRefresh = async () => {
+    try {
+      await refetch();
+      await filledSeatRefetch();
+      await attendaceRefech();
+      console.log("Seating arrangement refreshed successfully");
+    } catch (error) {
+      console.error("Error refreshing seating arrangement:", error);
+    }
+  }
   return (
-    <div className="">
-      {/* {isLoading ? <Skeleton length={20} /> : Table} */}
+    <div className="seat-arrangement-page">
+      <div className={`refresh`} onClick={handleBtnRefresh}>
+        <RefreshBtn />
+    </div>
       {data ?
-        <main>
-          {Table}
+        <main className="seat-continer">
           <div className="seat-page">
             <div className="seating-arrangement">
               {submitted && (
-
                 <div>
                   <div>
                     <h2 className="heading heading-padding">Seating Arrangement</h2>
-                    <button onClick={handleRefresh}>Refresh</button>
+                  
                   </div>
                   {seatingArrangement()}
                 </div>
               )}
             </div>
           </div>
+          {Table}
         </main>
         :
         <Link to="/admin/seats/new" >

@@ -1,4 +1,10 @@
-import { CartItem, ShippingInfo, User } from "./types";
+import { Admin, CartItem, ShippingInfo, User } from "./types";
+
+export interface AdminReducerInitialState {
+  admin: Admin | null;
+  loading: boolean;
+}
+
 
 export interface UserReducerInitialState {
   user: User | null;

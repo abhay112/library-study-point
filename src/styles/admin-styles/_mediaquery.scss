@@ -28,7 +28,13 @@
   .admin-container {
     grid-template-columns: 1fr !important;
   }
+  .seat-arrangement-page {
+    main{
+      flex-direction: column;
+    }
+  }
 }
+
 
 @media screen and (width<= 768px) {
   .cart {
@@ -84,6 +90,21 @@
       max-width: 400px;
     }
   }
+  .admin-container{
+    >aside{
+      width: 100% !important;
+      >div{
+
+      }
+    }
+    .seat-page{
+      background-color: white;
+      padding: 2rem;
+      overflow: auto;
+      height: 100%;
+      width: 100%;
+    }
+  }
 
   .chart-container {
     padding: 0;
@@ -104,6 +125,110 @@
     }
     .stopwatch {
       align-items: center;
+    }
+  }
+   .seat-arrangement-page {
+    .refresh{
+      .refresh-btn {
+        button {
+          width: 80px !important;
+          span{
+            padding: 5px !important;
+            font-size: 10px;
+            &::after{
+              padding: 5px !important;
+            }
+          }
+        }
+      }
+    }
+    main{
+      flex-direction: column;
+      .seat-page{
+        border-bottom:1px solid  rgb(0 0 0 / 36%);
+        margin-bottom: 2rem;
+      }
+    }
+  }
+  .table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th,
+    td {
+      padding: 8px;
+      vertical-align: middle;
+    }
+
+    th {
+      font-weight: bold;
+      color: #0000009e;
+      font-size: 0.5rem;
+      font-weight: 400;
+      padding: 2rem 1rem;
+    }
+
+    thead {
+
+      th {
+        font-size: 0.5rem !important;
+        padding: 0.2rem 0.5rem !important;
+      }
+    }
+
+    tbody {
+      td {
+        // padding: 0rem;
+        font-size: 0.5rem;
+        padding: 0rem 0.5rem;
+        img {
+          width: 1rem !important;
+          height: 2rem;
+        }
+
+        a {
+          padding: 0.25rem 0.5rem !important;
+          border-radius: 5px !important;
+        }
+
+        button {
+          width: 2rem;
+          height: 2rem;
+          font-size: 0.5rem;
+
+          &:hover {
+            opacity: 0.6;
+          }
+        }
+
+        &:first-child {
+          border-left: none;
+        }
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+      tr > td:nth-child(3) { /* Select the third td element in each row */
+        width: 100px !important;
+        max-width: 100px !important;
+        overflow: scroll;
+        border-right: 1px solid rgba(0, 0, 0, 0.093);; 
+        box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.093);
+      }
+    }
+  }
+  .create-product-btn {
+    position: fixed;
+    right: 2rem;
+    top: 5rem;
+    @include square(2rem);
+    @include flex(row, center, center, 0);
+    border-radius: 50%;
+    background-color: rgb(201, 9, 9);
+    color: rgb(248, 248, 248);
+    &:hover {
+      opacity: 0.8;
     }
   }
 }

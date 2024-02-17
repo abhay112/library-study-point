@@ -4,6 +4,7 @@
   text-transform: $case;
 }
 
+
 @mixin flex(
   $dir: row,
   $justifyContent: center,
@@ -38,6 +39,10 @@
   transform: translate(-50%, -50%);
 }
 
+@mixin pageWrapper{
+  max-width:1100px;
+  margin:0 auto;
+}
 @mixin square($s: 1rem) {
   height: $s;
   width: $s;

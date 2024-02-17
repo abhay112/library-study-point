@@ -6,6 +6,8 @@ import { userReducer } from "./reducer/userReducer";
 import { enquiryAPI } from "./api/enquiryAPI";
 import { feesAPI } from "./api/feesAPI";
 import { seatAPI } from "./api/seatAPI";
+import { adminApi } from "./api/adminApi";
+import { adminReducer } from "./reducer/adminReducer";
 // import { cartReducer } from "./reducer/cartReducer";
 // import { orderApi } from "./api/orderAPI";
 // import { dashboardApi } from "./api/dashboardAPI";
@@ -14,6 +16,7 @@ export const server = import.meta.env.VITE_SERVER;
 
 export const store = configureStore({
   reducer: {
+    [adminApi.reducerPath]: adminApi.reducer,
     [userAPI.reducerPath]: userAPI.reducer,
     [studentAPI.reducerPath]: studentAPI.reducer,
     [attendanceAPI.reducerPath]:attendanceAPI.reducer,
@@ -23,10 +26,12 @@ export const store = configureStore({
     // [orderApi.reducerPath]: orderApi.reducer,
     // [dashboardApi.reducerPath]: dashboardApi.reducer,
     [userReducer.name]: userReducer.reducer,
+    [adminReducer.name]: adminReducer.reducer,
     // [cartReducer.name]: cartReducer.reducer,
   },
   middleware: (mid) => [
     ...mid(),
+    adminApi.middleware,
     userAPI.middleware,
     studentAPI.middleware,
     attendanceAPI.middleware,

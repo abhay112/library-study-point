@@ -22,6 +22,9 @@ import UserSeats from './pages/users/seats';
 import UserAttendance from './pages/users/attendance';
 import UserFeesPage from './pages/users/fees';
 import UserAttendanceManagement from './pages/users/management/attendancemanagement';
+import AdminLogin from './pages/adminLogin';
+import { getAdmin } from './redux/api/adminApi';
+import { adminExist, adminNotExist } from './redux/reducer/adminReducer';
 
 const Home = lazy(() => import("./pages/home"));
 const Login = lazy(() => import("./pages/login"));
@@ -46,8 +49,9 @@ const App = () => {
   const dispatch = useDispatch();
 
   const { user, loading } = useSelector((state: RootState) => state.userReducer);
+  const { admin, loading:adminLoading } = useSelector((state: RootState) => state.adminReducer);
   const [authChecked, setAuthChecked] = useState(false);
-
+  console.log(admin);
   // useEffect(()=>{
   //   onAuthStateChanged(auth,async (user)=>{
   //     if(user){
@@ -76,6 +80,22 @@ const App = () => {
     return () => unsubscribe();
   }, [dispatch, loading]);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (admin) => {
+      if (admin) {
+        const data = await getAdmin(admin.uid);
+        console.log('logged in', loading);
+        console.log(admin,admin.uid);
+        dispatch(adminExist(data.admin));
+      } else {
+        console.log('logged out');
+        dispatch(adminNotExist());
+      }
+      setAuthChecked(true);
+    });
+    return () => unsubscribe();
+  }, [dispatch, adminLoading]);
+
   
   if (!authChecked) {
     return <Loader />
@@ -84,7 +104,7 @@ const App = () => {
 
   return (
     <Router>
-      <Header user={user} />
+      <Header user={user} admin={admin}/>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -96,15 +116,20 @@ const App = () => {
               </ProtectedRoute>
             } />
           </Route>
-
+          {/* <Route path="/admin/login" element={<AdminLogin />} /> */}
+          <Route path="/admin/login" element={
+              <ProtectedRoute  isAuthenticated={admin?false:true} adminRoute={admin ? true :false}>
+                <AdminLogin />
+              </ProtectedRoute>
+            } />
           {/* //admin Rotues */}
 
           <Route
             element={
               <ProtectedRoute
                 isAuthenticated={true}
-                adminOnly={true}
-                admin={user?.role === "admin" ? true : false}
+                adminRoute={admin ? true :false}
+                // adminOnly={true}
               />
             }
           >

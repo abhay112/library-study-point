@@ -5,6 +5,13 @@ export type User = {
   role: string;
   _id: string;
 };
+export type Admin = {
+  name: string;
+  email: string;
+  password: string;
+  library:string;
+  _id: string;
+};
 
 export type Product = {
   name: string;

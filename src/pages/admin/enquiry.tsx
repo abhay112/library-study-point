@@ -63,10 +63,10 @@ const img2 = "https://w7.pngwing.com/pngs/4/736/png-transparent-female-avatar-gi
 
 
 const Enquiry = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id||"";
+  const { admin } = useSelector((state: RootState) => state.adminReducer);
+  const adminId = admin?._id||"";
 
-  const { data,isError,error,refetch } = useGetEnquiryQuery(userId, { refetchOnMountOrArgChange: true });
+  const { data,isError,error,refetch } = useGetEnquiryQuery(adminId, { refetchOnMountOrArgChange: true });
   const [deleteQuery] = useDeleteEnquiryMutation();
   const [rows, setRows] = useState<DataType[]>([]);
  
@@ -96,7 +96,7 @@ const Enquiry = () => {
   }, [data]);
   const deleteHandler = async (id: string) => {
     const res = await deleteQuery({
-      adminId: userId,
+      adminId: adminId,
       queryId: id,
     });
     console.log(res);

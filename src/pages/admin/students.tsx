@@ -41,17 +41,17 @@ const columns: Column<DataType>[] = [
 
 
 const Students = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id||"";
-  const { data } = useAllStudentsQuery(userId , { refetchOnMountOrArgChange: true });
-  console.log(data,user?._id,'student');
+  const {admin} = useSelector((state:RootState)=>state.adminReducer)
+  const adminId = admin?._id||""
+  const { data } = useAllStudentsQuery(adminId , { refetchOnMountOrArgChange: true });
+  console.log(data,admin?._id,'student');
   const [rows, setRows] = useState<DataType[]>([]);
   useEffect(() => {
     if (data)
       setRows(
         data.students.map((i) => ({
           photo: <img src={`${server}/${i.photo}`} />,
-          name: i.name,
+          name: i.name.split(' ')[0],
           email:i.email,
           mobile:i.mobile,
           action: <Link to={`/admin/student/${i._id}`}>Manage</Link>,

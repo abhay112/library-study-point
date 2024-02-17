@@ -7,8 +7,8 @@ import { RootState } from "../../../redux/store";
 import { useNewStudentMutation } from "../../../redux/api/studentAPI";
 
 const NewStudent = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id || ""
+  const {admin} = useSelector((state:RootState)=>state.adminReducer)
+  const adminId = admin?._id||""
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [mobile, setMobile] = useState<string>("");
@@ -16,8 +16,6 @@ const NewStudent = () => {
   const [feesAmount, setFeesAmount] = useState<number | null>(null);
   const [photoPrev, setPhotoPrev] = useState<string>("");
   const [photo, setPhoto] = useState<File>();
-
-
   const [newStudent] = useNewStudentMutation();
 
   const navigate = useNavigate();
@@ -55,7 +53,7 @@ const NewStudent = () => {
     formData.set("feesAmount", feesAmount?.toString() || '');
     formData.set("photo", photo || '');
 
-    const res = await newStudent({ id: userId, formData });
+    const res = await newStudent({ id: adminId, formData });
     console.log(res);
     responseToast(res, navigate, "/admin/students");
   };

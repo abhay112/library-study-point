@@ -9,9 +9,11 @@ import { responseToast } from "../../../utils/features";
 
 
 const StudentManagement = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
+  // const { user } = useSelector((state: RootState) => state.userReducer);
+  const {admin} = useSelector((state:RootState)=>state.adminReducer)
   const params = useParams<{ id?: string }>();
   const id = params?.id || "";
+  const adminId = admin?._id||""
   const navigate = useNavigate();
   const { data, isError,refetch } = useStudentDetailsQuery(id, { refetchOnMountOrArgChange: true });
   console.log(data);
@@ -66,7 +68,7 @@ const StudentManagement = () => {
     if (photoFile)   formData.set("photo", photoFile);
     const res = await updateStudent({
       formData,
-      userId: user?._id || "",
+      userId: adminId || "",
       studentId: data?.student._id || "",
     })
     console.log(res);
@@ -78,7 +80,7 @@ const StudentManagement = () => {
   const deleteHandler = async () => {
     try {
         const res = await deleteProduct({
-        userId: user?._id || "",
+        userId: adminId,
         studentId: data?.student._id || "",
       }) // unwrap to access the actual response
 

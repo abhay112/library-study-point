@@ -9,22 +9,22 @@ import { useNavigate } from "react-router-dom";
 import { responseToast } from "../../../utils/features";
 
 const NewEnquiry = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id ||"";
+  const { admin } = useSelector((state: RootState) => state.adminReducer);
+  const adminId = admin?._id ||"";
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [mobile, setMobile] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [shift, setShift] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  // const [adminId, setAdminId] = useState<string>(userId);
+  // const [adminId, setAdminId] = useState<string>(adminId);
 
   const [createEnquiry] = useCreateEnquiryMutation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log(name, email, mobile, gender, shift, user?._id);
+    // console.log(name, email, mobile, gender, shift, admin?._id);
     if (!name || !email || mobile.length < 10 || !gender || !shift) {
       console.log('error');
       return;
@@ -36,9 +36,9 @@ const NewEnquiry = () => {
       gender,
       shift,
       message,
-      adminId:userId,
+      adminId:adminId,
     };
-    const res = await createEnquiry({ id: userId, formData:formData});
+    const res = await createEnquiry({ id: adminId, formData:formData});
     console.log(res);
     responseToast(res, navigate, "/admin/enquiry");
   }

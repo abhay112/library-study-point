@@ -14,6 +14,7 @@ import {
   AttendanceFormData,
   AttendanceDetails,
   SeatLayout,
+  Admin,
 } from "./types";
 
 export type CustomError = {
@@ -46,6 +47,15 @@ export type AllUsersResponse = {
   users: User[];
 };
 
+export type AdminResponse = {
+  success: boolean;
+  admin: Admin;
+};
+
+// export type AdminLoginResponse={
+//   success: boolean;
+//   admin: string;
+// }
 export type UserResponse = {
   success: boolean;
   user: User;

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useGetFilledSeatLayoutQuery, useGetSeatLayoutQuery } from "../../redux/api/seatAPI";
@@ -11,7 +10,8 @@ import { responseToast } from "../../utils/features";
 
 const UserSeats = () => {
     const { user } = useSelector((state: RootState) => state.userReducer);
-    const userId = user?._id||"";
+    const userId = user?._id || "";
+    // console.log(userId,user);
     const [rows, setRows] = useState<number | "">("");
     const [columns, setColumns] = useState<number | "">("");
     const [matrix, setMatrix] = useState<number[][]>([]);
@@ -21,6 +21,7 @@ const UserSeats = () => {
     const { data } = useGetSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
     const fetchSeat = useGetFilledSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
     console.log(fetchSeat?.currentData?.data?.filledSeats, 'fetchSeats');
+    console.log(fetchSeat, data);
     const navigate = useNavigate();
     const [createNewStudentAttendance] = useCreateNewStudentAttendanceMutation();
 
@@ -29,7 +30,6 @@ const UserSeats = () => {
             const newMatrix = Array.from({ length: Number(rows) }, () =>
                 Array.from({ length: Number(columns) }, () => 0)
             );
-           
             setMatrix(newMatrix);
             if (boardRef.current) {
                 boardRef.current.style.setProperty("--grid-rows", String(rows));
@@ -60,7 +60,7 @@ const UserSeats = () => {
                         {matrix[i][j] !== 0 && matrix[i][j] !== 999 ? (
                             <p
                                 className={`seat ${className}`}
-                                onClick={() => handleGetSeatStatus(i, j,matrix[i][j])}
+                                onClick={() => handleGetSeatStatus(i, j, matrix[i][j])}
                             >{matrix[i][j]}</p>
                         ) : matrix[i][j] == 999 ? <p className="gate"></p> : <p className="empty"></p>}
                     </div>
@@ -76,42 +76,37 @@ const UserSeats = () => {
     };
 
 
-    const handleGetSeatStatus = async(idx1: number, idx2: number,seatNumber:number) => {
+    const handleGetSeatStatus = async (idx1: number, idx2: number, seatNumber: number) => {
         const confirmed = window.confirm(`You have selected ${seatNumber}th seat`);
         if (confirmed) {
             const formData = {
-                idx1:idx1,
-                idx2:idx2,
+                idx1: idx1,
+                idx2: idx2,
             }
-            const res = await createNewStudentAttendance({studentId:userId,formData});
+            const res = await createNewStudentAttendance({ studentId: userId, formData });
             responseToast(res, navigate, "/user/attendance");
-            console.log(res);
         }
 
     };
-    console.log(user?._id)
+    console.log(data)
     return (
-        <div className="admin-container">
+        <div className="admin-container"> 
             <UserSidebar />
-            {data ?
-                <main>
-                    <div className="seat-page">
-                        <div className="seating-arrangement">
-                            {submitted && (
-                                <div><div><h2 className="heading heading-padding">Seating Arrangement</h2></div>
-                                    {seatingArrangement()}</div>
-                            )}
+            <div className="seat-arrangement-page">
+                {data &&
+                    <main className="seat-continer">
+                        <div className="seat-page">
+                            <div className="seating-arrangement">
+                                {submitted && (
+                                    <div><div><h2 className="heading heading-padding">Seating Arrangement</h2></div>
+                                        {seatingArrangement()}</div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                </main> :
-                <Link to="/user/seats/new" >
-                    <FaEdit onClick={() => setSubmitted(false)} /> Create Seat Arrangement
-                </Link>}
-            {submitted && <Link to="/user/seats/new" className="create-product-btn">
-                <FaEdit onClick={() => setSubmitted(false)} />
-            </Link>}
-
+                    </main>}
+            </div>
         </div>
+
     );
 };
 

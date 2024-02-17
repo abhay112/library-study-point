@@ -8,12 +8,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { responseToast } from "../../../utils/features";
 
 const NewEnquiry = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id ||"";
+  const { admin } = useSelector((state: RootState) => state.adminReducer);
+  const adminId = admin?._id ||"";
   const navigate = useNavigate();
   const location = useLocation();
   const enquiryId = location.pathname.split('/').pop() || '';
-  const { data } = useGetSingleEnquiryQuery({adminId:userId,id:enquiryId});
+  const { data } = useGetSingleEnquiryQuery({adminId:adminId,id:enquiryId});
   console.log(data);
   const enquiry = data?.enquiries[0];
   const {_id, name, email, mobile, gender, shift, message } = enquiry || {
@@ -40,12 +40,12 @@ const NewEnquiry = () => {
         mobile,
         gender,
         shift,
-        adminId:userId,
+        adminId:adminId,
         message:messageUpdate,
     }
-    // const res = await updateEnquiry({ adminId:userId,enquiryId:data?.enquiries?._id||"",formData:formData});
+    // const res = await updateEnquiry({ adminId:adminId,enquiryId:data?.enquiries?._id||"",formData:formData});
     const res = await updateEnquiry({
-      adminId: userId,
+      adminId: adminId,
       enquiryId: enquiryId,
       formData: formData
     });

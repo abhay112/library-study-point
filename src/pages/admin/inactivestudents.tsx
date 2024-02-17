@@ -41,10 +41,10 @@ const columns: Column<DataType>[] = [
 
 
 const InActive = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id||"";
-  const {  data } = useAllEnrolledStudentsQuery(userId, { refetchOnMountOrArgChange: true });
-  console.log(data,user?._id,'student');
+  const { admin } = useSelector((state: RootState) => state.adminReducer);
+  const adminId = admin?._id||"";
+  const {  data } = useAllEnrolledStudentsQuery(adminId, { refetchOnMountOrArgChange: true });
+  console.log(data,admin?._id,'student');
   const [rows, setRows] = useState<DataType[]>([]);
   useEffect(() => {
     if (data)
@@ -72,9 +72,9 @@ const InActive = () => {
     <div className="admin-container">
       <AdminSidebar />
       <main>{Table}</main>
-      <Link to="/admin/student/new" className="create-product-btn">
+      {/* <Link to="/admin/student/new" className="create-product-btn">
         <FaPlus />
-      </Link>
+      </Link> */}
     </div>
   );
 };

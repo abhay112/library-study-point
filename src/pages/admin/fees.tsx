@@ -7,8 +7,6 @@ import TableHOC from "../../components/admin/TableHOC";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-// import {  useDeleteEnquiryMutation } from "../../redux/api/enquiryAPI";
-// import {  Fees } from "../../types/types";
 import { CustomError } from "../../types/api-types";
 import toast from "react-hot-toast";
 import { useGetFeesQuery } from "../../redux/api/feesAPI";
@@ -56,10 +54,10 @@ const img2 = "https://w7.pngwing.com/pngs/4/736/png-transparent-female-avatar-gi
 
 
 const FeesPage = () => {
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id||"";
+  const { admin } = useSelector((state: RootState) => state.adminReducer);
+  const adminId = admin?._id||"";
 
-  const { data,isError,error } = useGetFeesQuery(userId, { refetchOnMountOrArgChange: true });
+  const { data,isError,error } = useGetFeesQuery(adminId, { refetchOnMountOrArgChange: true });
 
   // const [deleteQuery] = useDeleteEnquiryMutation();
   const [rows, setRows] = useState<DataType[]>([]);
@@ -75,7 +73,7 @@ const FeesPage = () => {
       setRows(
         data?.currentFees?.map((val) => ({
           avatar: (<img style={{borderRadius: "80%", }} src={`${val?.gender === "Female" ? img2 : img}`} alt="Shoes"/>),
-          name: val?.studentName,
+          name: val?.studentName.split(' ')[0],
           mobile: val?.mobile,
           shift: val?.fees.shift,
           date:val?.fees?.date,
@@ -86,7 +84,7 @@ const FeesPage = () => {
   }, [data]);
   // const deleteHandler = async (id: string) => {
   //   const res = await deleteQuery({
-  //     adminId: userId,
+  //     adminId: adminId,
   //     queryId: id,
   //   });
   //   console.log(res);
@@ -104,9 +102,9 @@ const FeesPage = () => {
     <div className="admin-container">
       <AdminSidebar />
       <main>{Table}</main>
-      <Link to="/admin/enquiry/new" className="create-product-btn">
+      {/* <Link to="/admin/enquiry/new" className="create-product-btn">
         <FaPlus />
-      </Link>
+      </Link> */}
     </div>
   );
 };

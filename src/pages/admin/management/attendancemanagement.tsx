@@ -60,9 +60,9 @@ const columns: Column<DataType>[] = [
 const AttendanceManagement = () => {
   const location = useLocation();
   const studentId = location.pathname.split('/').pop() || '';
-  const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id ||"";
-  const { isLoading, isError, error, data, refetch } = useGetSingleStudentAllAttendaceQuery({ adminId:userId, studentId: studentId });
+  const { admin } = useSelector((state: RootState) => state.adminReducer);
+  const adminId = admin?._id ||"";
+  const { isLoading, isError, error, data, refetch } = useGetSingleStudentAllAttendaceQuery({ adminId:adminId, studentId: studentId });
 
   const updateHandler = async (adminId: string, studentId: string) => {
     console.log(adminId,studentId);

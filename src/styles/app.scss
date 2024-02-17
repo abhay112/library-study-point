@@ -10,6 +10,10 @@
   box-sizing: border-box;
 }
 
+// .page-wrapper{
+//   // max-width: 1330px;
+//   margin: 0 auto;
+// }
 body {
   user-select: none;
 }
@@ -74,30 +78,34 @@ $color3: rgb(0, 104, 136);
   text-align: center;
 }
 
-.seat-page {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-}
+// .seat-page {
+//   display: flex;
+//   align-items: flex-start;
+//   justify-content: center;
+// }
+
 .dashboard-fees-box {
   background-color: white;
   padding: 2rem;
   overflow: auto;
   @include square(100%);
 }
-.seat-page{
+
+// .seat-page {
+//   background-color: white;
+//   padding: 2rem;
+//   overflow: auto;
+//   @include square(100%);
+// }
+
+.dashboard-student-box {
   background-color: white;
   padding: 2rem;
   overflow: auto;
   @include square(100%);
 }
-.dashboard-student-box{
-  background-color: white;
-  padding: 2rem;
-  overflow: auto;
-  @include square(100%);
-}
-.dashboard-enquiry-box{
+
+.dashboard-enquiry-box {
   background-color: white;
   padding: 2rem;
   overflow: auto;
@@ -144,74 +152,147 @@ $color3: rgb(0, 104, 136);
   }
 }
 
-.seating-arrangement {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 100%;
+
+
+.seat-arrangement-page {
+  background-color: white;
+  padding: 2rem;
+  overflow: auto;
+  height: 100%;
   width: 100%;
-
-  p {}
-
-  h2.heading-padding {
-    padding-bottom: 2rem;
-  }
-
-  .grid-row {
-    display: flex;
-    justify-content: center;
-
-    .square {
-      img {
-        width: 20px;
-        height: 20px
-      }
-
-      p.empty {
-        width: 20px;
-        height: 20px;
-        margin: 5px;
-      }
-
-      p.seat {
-        height: 20px;
-        width: 20px;
-        border: 1px solid #aeaeae;
-        font-size: 10px;
-        text-align: center;
-        margin: 5px;
+  .refresh{
+    width: fit-content;
+    .refresh-btn {
+      .button {
+        display: inline-block;
+        overflow: hidden;
+        width: 120px;
         cursor: pointer;
+    
+        perspective: 400px;
+        background-color: transparent;
+        -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(50%, transparent), to(rgba(255, 255, 255, 0.3)));
       }
-
-      p.seat.filled {
-        background-color: #aeaeae;
+      .button span {
+        display: block;
+        position: relative;
+        transition: 0.3s ease-in-out all;
+        transform-origin: 50% 0;
+        transform-style: preserve-3d;
+        background-color: black;
         color: white;
-        pointer-events: none;
+        width: 100%;
+        padding: 10px;
       }
-
-      p.seat.pending {
-        background-color: #f89595;
-        color: white;
-        pointer-events: none;
+    
+      .button span:after {
+        display: block;
+        content: attr(data-title);
+        position: absolute;
+        left: 0;
+        top: 0;
+        transition: 1.3s ease-in-out all;
+        transform-origin: 50% 0;
+        transform: translate3d(0px, 105%, 0px) rotateX(-90deg);
+        background-color: white;
+        color: black;
+        width: 100%;
+        padding: 10px;
       }
-
-      p.gate {
-        height: 20px;
-        width: 20px;
-        border: none;
-        margin: 5px;
-        color: white;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgb(205, 39, 39);
+    
+      .button:hover span {
+        transform: translate3d(0px, 0px, -30px) rotateX(90deg);
       }
-
+      // a {
+      //   color: inherit;
+      //   text-decoration: none;
+      // }
     }
+  }
+  
+ 
+  main {
+    display: flex;
+    .seat-page{
+      background-color: white;
+      padding: 2rem;
+      overflow: auto;
+      height: 100%;
+      width: 100%;
+      .seating-arrangement {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 100%;
+        width: 100%;
+  
+        p {}
+  
+        h2.heading-padding {
+          padding-bottom: 2rem;
+        }
+  
+        .grid-row {
+          display: flex;
+          justify-content: center;
+  
+          .square {
+            img {
+              width: 20px;
+              height: 20px
+            }
+  
+            p.empty {
+              width: 20px;
+              height: 20px;
+              margin: 5px;
+            }
+  
+            p.seat {
+              height: 20px;
+              width: 20px;
+              border: 1px solid #aeaeae;
+              font-size: 10px;
+              text-align: center;
+              margin: 5px;
+              cursor: pointer;
+            }
+  
+            p.seat.filled {
+              background-color: #aeaeae;
+              color: white;
+              pointer-events: none;
+            }
+  
+            p.seat.pending {
+              background-color: #f89595;
+              color: white;
+              pointer-events: none;
+            }
+  
+            p.gate {
+              height: 20px;
+              width: 20px;
+              border: none;
+              margin: 5px;
+              color: white;
+              text-align: center;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background-color: rgb(205, 39, 39);
+            }
+  
+          }
+        }
+  
+      }
+    }
+    
   }
 
 }
+
 
 .seat-layout {
   height: fit-content;
@@ -532,66 +613,6 @@ $color3: rgb(0, 104, 136);
 }
 
 @media (max-width:600px) {
+
   
-.table {
-  border-collapse: collapse;
-  width: 100%;
-
-  th,
-  td {
-    padding: 8px;
-    vertical-align: middle;
-  }
-
-  th {
-    font-weight: bold;
-    color: #0000009e;
-    font-size: 0.5rem;
-    font-weight: 400;
-    padding: 2rem 1rem;
-  }
-
-  thead {
-
-    th {
-      font-size:  0.5rem;
-      padding: 0.2rem 0.5rem;
-    }
-  }
-
-  tbody {
-    td {
-      // padding: 0rem;
-      font-size: 0.5rem;
-      padding: 0.8rem 0.5rem;
-
-      img {
-        width: 1rem;
-        height: 1rem;
-      }
-
-      a {
-        padding: 0.25rem 0.5rem;
-        border-radius: 5px;
-      }
-
-      button {
-        width: 2rem;
-        height: 2rem;
-        font-size: 0.5rem;
-        &:hover {
-          opacity: 0.6;
-        }
-      }
-
-      &:first-child {
-        border-left: none;
-      }
-
-      &:last-child {
-        border-right: none;
-      }
-    }
-  }
-}
 }

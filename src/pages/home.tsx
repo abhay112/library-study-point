@@ -1,54 +1,39 @@
-// import toast from "react-hot-toast";
-import {  useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-// import { Skeleton } from "../components/loader";
-// import ProductCard from "../components/product-card";
+import { useSelector } from "react-redux";
 import { useAllStudentsQuery } from "../redux/api/studentAPI";
 import { RootState } from "../redux/store";
-// import { addToCart } from "../redux/reducer/cartReducer";
-// import { CartItem } from "../types/types";
+import bgimg from '../assets/bg-img.png'
 
 const Home = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-  const userId = user?._id||"";
+  const userId = user?._id || "";
   const { data, isLoading, isError } = useAllStudentsQuery(userId);
-  console.log(data,isLoading,isError);
-  // const dispatch = useDispatch();
-
-  // const addToCartHandler = (cartItem: CartItem) => {
-  //   if (cartItem.stock < 1) return toast.error("Out of Stock");
-  //   dispatch(addToCart(cartItem));
-  //   toast.success("Added to cart");
-  // };
-
-  // if (isError) toast.error("Cannot Fetch the Products");
+  console.log(data, isLoading, isError);
 
   return (
     <div className="home">
-      <section></section>
+      <section className="banner">
+        <div className="page-wrapper">
+          <div className="left-section">
+            <h1>Study Point Library</h1>
+            <div>
+              <p>The Ultimate Place To Ace
+                your Dreams</p>
+              <div className="btns">
+                <button className="join-button">Join Now</button>
+                <button>Query</button>
+              </div>
+            </div>
+          </div>
+          <div className="right-section">
+            <img src={bgimg} />
+          </div>
+        </div>
 
-      <h1>
-        Latest Products
-        <Link to="/search" className="findmore">
-          More
-        </Link>
-      </h1>
+      </section>
+      <section className="">
 
-      <main>
-        {/* {isLoading ? (
-          <Skeleton width="80vw" />
-        ) : (
-          data?.students.map((i) => (
-            <ProductCard
-              key={i._id}
-              productId={i._id}
-              name={i.name}
-              handler={addToCartHandler}
-              photo={i.photo}
-            />
-          ))
-        )} */}
-      </main>
+      </section>
+
     </div>
   );
 };

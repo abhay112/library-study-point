@@ -7,6 +7,8 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import { MessageResponse } from "../types/api-types";
 import { userExist, userNotExist } from "../redux/reducer/userReducer";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { RiAdminFill } from "react-icons/ri";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -16,13 +18,13 @@ const Login = () => {
       const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(auth, provider);
 
-      console.log({
-        name: user.displayName!,
-        email: user.email!,
-        photo: user.photoURL!,
-        role: "user",
-        _id: user.uid,
-      });
+      // console.log({
+      //   name: user.displayName!,
+      //   email: user.email!,
+      //   photo: user.photoURL!,
+      //   role: "user",
+      //   _id: user.uid,
+      // });
 
       const res = await login({
         name: user.displayName!,
@@ -50,14 +52,18 @@ const Login = () => {
   return (
     <div className="login">
       <main>
-        <h1 className="heading">Login</h1>
         <div>
+        <h1 className="heading">Login</h1>
           <p>Already Signed In Once</p>
           <button onClick={loginHandler}>
             <FcGoogle /> <span>Sign in with Google</span>
           </button>
         </div>
+        <div className="admin-login">
+          <Link to="/admin/login"><RiAdminFill/><span>Admin Login</span></Link>
+        </div>
       </main>
+      
     </div>
   );
 };

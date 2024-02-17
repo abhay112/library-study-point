@@ -6,22 +6,19 @@ import { useCreateSeatMutation, useGetSeatLayoutQuery } from "../../../redux/api
 import { responseToast } from "../../../utils/features";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-// import SeatLayoutHOC from "../../components/admin/SeatLayoutHOC";
 
 const SeatsManagement = () => {
-    const { user } = useSelector((state: RootState) => state.userReducer);
+    const { admin } = useSelector((state: RootState) => state.adminReducer);
     const [rows, setRows] = useState<number | "">("");
     const [columns, setColumns] = useState<number | "">("");
     const [matrix, setMatrix] = useState<number[][]>([]);
     const [gridColors, setGridColors] = useState<string[][]>([]);
-    // const [createSeats, setCreateSeats] = useState<boolean>(false);
     const boardRef = useRef<HTMLDivElement>(null);
     const [submitted, setSubmitted] = useState<boolean>(false);
-    // const [seatsMatrix, setSeatsMatrix] = useState<number[][]>([]);
     const [createSeats] = useCreateSeatMutation();
-    const userId = user?._id ?? "";
+    const adminId = admin?._id ?? "";
 
-    const { data, isLoading } = useGetSeatLayoutQuery(userId, { refetchOnMountOrArgChange: true });
+    const { data, isLoading } = useGetSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -109,7 +106,7 @@ const SeatsManagement = () => {
             columns,
             matrix,
         }
-        const res = await createSeats({ adminId: userId, formData: formData });
+        const res = await createSeats({ adminId: adminId, formData: formData });
         responseToast(res, navigate, "/admin/seats");
     };
 

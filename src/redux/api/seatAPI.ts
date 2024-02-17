@@ -11,11 +11,11 @@ export const seatAPI = createApi({
   tagTypes: ["seats"],
   endpoints: (builder) => ({
     getSeatLayout: builder.query<SeatLayoutResponse, string>({
-      query: (id) => `fetchSeatLayout?id=${id}`,
+      query: (id) => `fetchSeatLayout/${id}`,
       providesTags: ["seats"],
     }),
     getFilledSeatLayout: builder.query<SeatLayoutResponse, string>({
-      query: () => `fetchFilledSeats`,
+      query: (id) => `fetchFilledSeats/${id}`,
       providesTags: ["seats"],
     }),
     createSeat: builder.mutation<MessageResponse, NewSeatRequest>({
