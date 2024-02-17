@@ -1,6 +1,5 @@
 /* eslint-disable no-unsafe-optional-chaining */
 import { ReactElement, useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";

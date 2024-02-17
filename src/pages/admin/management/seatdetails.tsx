@@ -10,7 +10,6 @@ import { Attendace } from "../../../types/types";
 import { CustomError } from "../../../types/api-types";
 import { useGetFilledSeatLayoutQuery, useGetSeatLayoutQuery } from "../../../redux/api/seatAPI";
 import { FaEdit } from "react-icons/fa";
-import { LuRefreshCcw } from "react-icons/lu";
 import RefreshBtn from "../../../components/refreshBtn";
 
 interface DataType {
