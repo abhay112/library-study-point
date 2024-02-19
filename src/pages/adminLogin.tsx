@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 import { adminExist, adminNotExist } from '../redux/reducer/adminReducer';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { MessageResponse } from '../types/api-types';
+import {  useNavigate } from 'react-router';
+import { responseToast } from '../utils/features';
 
 
 const AdminLogin = () => {
@@ -19,14 +21,14 @@ const AdminLogin = () => {
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupError, setSignupError] = useState<string | null>(null);
   const [signupErrorMessage, setSignupErrorMessage] = useState<string | null>(null);
-  const [isSignupMode, setIsSignupMode] = useState(false); // State to toggle between signup and login
+  const [isSignupMode, setIsSignupMode] = useState(false);
   const [signUp] = useAdminSignUpMutation();
   const [adminLogin] = useAdminLoginMutation();
-  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission
-
+  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const navigate = useNavigate();
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isSubmitting) return; // Prevent multiple submissions
+    if (isSubmitting) return; 
     setIsSubmitting(true);
     let res;
     try {
@@ -50,7 +52,7 @@ const AdminLogin = () => {
           const data = await getAdmin(user.uid);
           console.log(data);
           dispatch(adminExist(data?.admin));
-          // responseToast(res, navigate, "/cart");
+          // responseToast(res, navigate, "/admin/dashboard");
         } else {
           const error = res.error as FetchBaseQueryError;
           const message = (error.data as MessageResponse).message;
@@ -76,7 +78,7 @@ const AdminLogin = () => {
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
       // Handle signup
-      await signUp({
+     const res = await signUp({
         name: name,
         email: email,
         password: password,
@@ -91,6 +93,7 @@ const AdminLogin = () => {
       setSignupLoading(false);
       setSignupError(null);
       setSignupErrorMessage(null);
+      responseToast(res, navigate, "/admin/dashboard");
 
     } catch (error:any) {
       setSignupError(error);

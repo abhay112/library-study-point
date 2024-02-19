@@ -128,8 +128,8 @@ const App = () => {
             element={
               <ProtectedRoute
                 isAuthenticated={true}
-                adminRoute={admin ? true :false}
-                // adminOnly={true}
+                adminOnly={true}
+                admin={admin?true:false}
               />
             }
           >

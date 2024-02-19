@@ -1,7 +1,18 @@
 import { useSelector } from "react-redux";
 import { useAllStudentsQuery } from "../redux/api/studentAPI";
 import { RootState } from "../redux/store";
-import bgimg from '../assets/bg-img.png'
+import { lazy } from "react";
+import ImageGalleryComponent from "../components/image-gallery-cmp";
+import Services from "../components/Service/Services";
+import ProfComponent from "../components/ProfComponent";
+import Footer from "../components/Footer";
+// import styled from 'styled-components';
+
+// const FeaturesSection = lazy(() => import("../components/features-section"));
+const SliderComponent = lazy(() => import("../components/slider-component"));
+
+
+
 
 const Home = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
@@ -10,32 +21,40 @@ const Home = () => {
   console.log(data, isLoading, isError);
 
   return (
-    <div className="home">
-      <section className="banner">
+    <main className="landing-page">
+      <div className="section-01">
         <div className="page-wrapper">
-          <div className="left-section">
-            <h1>Study Point Library</h1>
+          <div className="landing-page-container">
             <div>
-              <p>The Ultimate Place To Ace
-                your Dreams</p>
-              <div className="btns">
-                <button className="join-button">Join Now</button>
-                <button>Query</button>
-              </div>
+              <ProfComponent />
             </div>
           </div>
-          <div className="right-section">
-            <img src={bgimg} />
-          </div>
+        </div>
+      </div>
+      <div className="section-02">
+        <div className="page-wrapper">
+          <Services />
+        </div>
+      </div>
+      <div className="section-03">
+        <div className="page-wrapper">
+          <ImageGalleryComponent />
+        </div>
+      </div>
+      <div className="section-04">
+        <div className="page-wrapper">
+          <SliderComponent />
         </div>
 
-      </section>
-      <section className="">
-
-      </section>
-
-    </div>
+      </div>
+      <div className="section-05">
+        <div className="page-wrapper">
+          <Footer />
+        </div>
+      </div>
+    </main>
   );
 };
+
 
 export default Home;

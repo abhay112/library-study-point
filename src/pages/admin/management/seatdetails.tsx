@@ -11,6 +11,7 @@ import { CustomError } from "../../../types/api-types";
 import { useGetFilledSeatLayoutQuery, useGetSeatLayoutQuery } from "../../../redux/api/seatAPI";
 import { FaEdit } from "react-icons/fa";
 import RefreshBtn from "../../../components/refreshBtn";
+import { Skeleton } from "../../../components/loader";
 
 interface DataType {
   photo: ReactElement;
@@ -49,7 +50,7 @@ const attendanceColumns: Column<DataType>[] = [
 const SeatDetails = () => {
   const { admin } = useSelector((state: RootState) => state.adminReducer);
   const adminId = admin?._id||"";
-  const { isError, error, data: attendanceData, refetch: attendaceRefech } = useGetAttendanceQuery(adminId, { refetchOnMountOrArgChange: true });
+  const { isError, error, data: attendanceData, refetch: attendaceRefech,isLoading:isLoadingAttendace, } = useGetAttendanceQuery(adminId, { refetchOnMountOrArgChange: true });
   const [updateAttendance] = useUpdateAttendanceMutation();
   const [attendaceRows, setAttendaceRows] = useState<DataType[]>([]);
   const [rows, setRows] = useState<number | "">("");
@@ -57,7 +58,7 @@ const SeatDetails = () => {
   const [matrix, setMatrix] = useState<number[][]>([]);
   const boardRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const { data, refetch } = useGetSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
+  const { data, refetch ,isLoading:isLoadingSeatLayout} = useGetSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
   const {data:fetchSeat,refetch: filledSeatRefetch  } = useGetFilledSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
   console.log(fetchSeat,data);
   console.log(attendanceData)
@@ -67,7 +68,7 @@ const SeatDetails = () => {
         attendanceData?.data.map((val: Attendace) => ({
           photo: <img src={img2} alt="Shoes" />,
           name: val.studentName.split(' ')[0],
-          seat: val.latestAttendance?.seatNumber ? val.latestAttendance?.seatNumber : NaN, // Ensure seat is always a number
+          seat: val.latestAttendance?.seatNumber ? val.latestAttendance?.seatNumber : 0, // Ensure seat is always a number
           status: val.latestAttendance?.isPresent === "Present" ? <span className="green">Present</span> : val.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> : <span className="red">Absent</span>,
           action: val.latestAttendance?.isPresent === "Pending" ?
             <Link to={`/admin/seats`}
@@ -189,7 +190,12 @@ const SeatDetails = () => {
       <div className={`refresh`} onClick={handleBtnRefresh}>
         <RefreshBtn />
     </div>
-      {data ?
+    
+      {!data&&
+       <Link to="/admin/seats/new" >
+          <FaEdit onClick={() => setSubmitted(false)} /> Create Seat Arrangement
+        </Link>}
+      {!isLoadingSeatLayout ?
         <main className="seat-continer">
           <div className="seat-page">
             <div className="seating-arrangement">
@@ -204,12 +210,9 @@ const SeatDetails = () => {
               )}
             </div>
           </div>
-          {Table}
+          {isLoadingAttendace?<Skeleton length={10}/>:Table}
         </main>
-        :
-        <Link to="/admin/seats/new" >
-          <FaEdit onClick={() => setSubmitted(false)} /> Create Seat Arrangement
-        </Link>}
+        :<Skeleton length={10}/>}
       {
         submitted && <Link to="/admin/seats/new" className="create-product-btn">
           <FaEdit onClick={() => setSubmitted(false)} />
