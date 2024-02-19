@@ -212,7 +212,7 @@ const Testimonials = styled.div`
 const Buttons = styled.div`
     position: absolute;
     right: 0.7rem;
-    bottom: -2rem;
+    bottom: -2.5rem;
 
     button{
         background-color: transparent;
@@ -220,7 +220,7 @@ const Buttons = styled.div`
         border: none;
         color: #01be96;
         cursor: pointer;
-        font-size: 1.1rem;
+        font-size: 1.5rem;
     }
 
     @media(max-width:530px){
@@ -228,9 +228,10 @@ const Buttons = styled.div`
     }
 `
 const Container1 = styled.div`
-    background: #f1f1f1;
+    background: #ffffff;
     padding: 1.5rem 1rem;
     margin: 0 1rem;
+    border-radius:10px;
 `
 
 const Header = styled.div`

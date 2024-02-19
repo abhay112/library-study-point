@@ -218,6 +218,9 @@ const SeatDetails = () => {
           <FaEdit onClick={() => setSubmitted(false)} />
         </Link>
       }
+      <div className="footer-des">
+        <p>color</p>
+      </div>
     </div>
   );
 };

@@ -108,6 +108,27 @@
       padding-bottom: 5rem !important;
     }
   }
+  .slider-box{
+    .react-slick-box{
+    }
+    .slick-list, .slick-slider, .slick-track{
+      padding: 1rem 0 !important;
+    }
+    .center .slick-center .project{
+      transform: scale(2) !important;
+      opacity: 1 !important;
+    }
+    
+    .center .project{
+      opacity: 1 !important;
+    }
+  }
+  .izRqrf button{
+    right: -1rem !important;
+  }
+  .izRqrf .back{
+    left:-1rem !important;
+  }
   .product-management {
     flex-direction: column;
     align-items: center;

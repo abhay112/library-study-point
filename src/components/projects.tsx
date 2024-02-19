@@ -154,11 +154,11 @@ const Buttons = styled.div`
     border: none;
     position: absolute;
     top: 45%;
-    right: -1rem;
+    right: -2rem;
   }
 
   .back{
-    left: -1rem;
+    left: -2rem;
   }
 `
 

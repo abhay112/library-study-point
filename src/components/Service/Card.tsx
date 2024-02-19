@@ -4,12 +4,13 @@ interface CardProps {
     Icon: React.ElementType;
     disc: string;
     title: string;
+    className:string;
 }
 const Card: React.FC<CardProps> = (props) => {
-    const { Icon, disc, title } = props;
+    const { Icon, disc, title,className } = props;
   return (
     <Container>
-        <span className='white'><Icon/></span>
+       <span style={{ color: className }}><Icon/></span>
         <h1>{title}</h1>
         <p>{disc}</p>
     </Container>
@@ -20,7 +21,8 @@ export default Card;
 
 const Container = styled.div`
     width: 100%;
-    background: grey;
+    background: white;
+    border-radius:10px;
     padding: 1rem;
     text-align: center;
     span{
@@ -30,7 +32,7 @@ const Container = styled.div`
     h1{
         font-size: 1.2rem;
         padding-bottom: 1rem;
-        color:white;
+        color:black;
     }
 
     p{

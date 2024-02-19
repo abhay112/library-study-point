@@ -18,75 +18,31 @@ const Footer = () => {
   return (
     <Container id="footer">
       <Profile>
-        <Slide direction="left" delay={1}>
+        <Slide direction="left">
           <h1>Library Location</h1>
-        </Slide>
         <div className="address">
-          <Slide direction="left">
+          
             <h1>Address:</h1>
-          </Slide>
-          <Slide direction="left">
+          
             <p>3/772-B, Gudamba Thaana Rd, Sector H, Jankipuram, Lucknow, Uttar Pradesh 226021</p>
-          </Slide>
+          
         </div>
         <div className="links">
-          <Slide direction="left">
             <h1>Contact Us directly:</h1>
-          </Slide>
           <div>
             <span>
               <FiPhoneCall />
             </span>
-            <Slide direction="left">
               <a href="tel:+4733378901">6307117006</a>
-            </Slide>
           </div>
           <div>
-            <Slide direction="left">
               <span>
                 <HiOutlineMailOpen />
               </span>
-            </Slide>
-            <Slide>
               <a href="mailto:miladamiri@gmail.com">ashutoshVerma@gmail.com</a>
-            </Slide>
           </div>
         </div>
-        {/* <div className="profiles">
-          <Slide direction="left">
-            <h1>Check my profiles</h1>
-          </Slide>
-          <div className="icons">
-            <Zoom>
-              <span>
-                <a href="/">
-                  <AiFillGithub />
-                </a>
-              </span>
-            </Zoom>
-            <Zoom>
-              <span>
-                <a href="/">
-                  <AiFillLinkedin />
-                </a>
-              </span>
-            </Zoom>
-            <Zoom>
-              <span>
-                <a href="/">
-                  <BsFacebook />
-                </a>
-              </span>
-            </Zoom>
-            <Zoom>
-              <span>
-                <a href="/">
-                  <BsSlack />
-                </a>
-              </span>
-            </Zoom>
-          </div>
-        </div> */}
+        </Slide>
         <Fade>
           <ArrowUp onClick={scrollUp}>
             <AiOutlineArrowUp />
@@ -255,11 +211,12 @@ const Form = styled.div`
         padding: 1rem 0.5rem;
       }
       span {
-        background-color: grey;
+        background-color:white;
         width: 3rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-right:1px solid grey;
       }
       .messageIcon {
         align-items: flex-start;

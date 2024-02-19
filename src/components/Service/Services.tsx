@@ -3,7 +3,7 @@ import { FaGlassWaterDroplet } from "react-icons/fa6";
 import { CgWebsite } from "react-icons/cg";
 import styled from "styled-components";
 import Card from "./Card";
-import { Slide } from "react-awesome-reveal";
+import { Fade, Slide } from "react-awesome-reveal";
 
 const Services = () => {
   return (
@@ -21,30 +21,34 @@ const Services = () => {
             title={"Multiple News Papers"}
             disc={`Lorem ipsum dolor sit amet consectetur 
                 adipisicing elit. Commodi et asperiores cum exercitationem officia rem amet minus magnam? Cum, voluptatem?`}
+            className={"#47ec71"}
           />
         </Slide>
-        <Slide direction="up">
+        <Fade >
           <Card
             Icon={FaGlassWaterDroplet}
             title={"Miniral Water"}
             disc={`Lorem ipsum dolor sit amet consectetur 
                 adipisicing elit. Commodi et asperiores cum exercitationem officia rem amet minus magnam? Cum, voluptatem?`}
+                className={"#546de9"}
           />
-        </Slide>
+        </Fade>
         <Slide direction="right">
           <Card
             Icon={CgWebsite}
             title={"Wifi"}
             disc={`Lorem ipsum dolor sit amet consectetur 
                 adipisicing elit. Commodi et asperiores cum exercitationem officia rem amet minus magnam? Cum, voluptatem?`}
+                className={"#e054e8"}
           />
         </Slide>
-        <Slide direction="right">
+        <Slide direction="left">
           <Card
             Icon={CgWebsite}
             title={"Air Conditionar"}
             disc={`Lorem ipsum dolor sit amet consectetur 
                 adipisicing elit. Commodi et asperiores cum exercitationem officia rem amet minus magnam? Cum, voluptatem?`}
+                className={"#e8bd54"}
           />
         </Slide>
       </Cards>
