@@ -6,13 +6,8 @@ import ImageGalleryComponent from "../components/image-gallery-cmp";
 import Services from "../components/Service/Services";
 import ProfComponent from "../components/ProfComponent";
 import Footer from "../components/Footer";
-// import styled from 'styled-components';
 
-// const FeaturesSection = lazy(() => import("../components/features-section"));
 const SliderComponent = lazy(() => import("../components/slider-component"));
-
-
-
 
 const Home = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);

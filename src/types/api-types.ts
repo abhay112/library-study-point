@@ -109,6 +109,10 @@ export type NewSeatRequest = {
   adminId:string;
   formData:object;
 }
+export type NewPdfRequest = {
+  adminId:string;
+  formData:object;
+}
 export type DeleteQueryRequest = {
   adminId: string;
   queryId: string;

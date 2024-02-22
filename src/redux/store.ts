@@ -8,6 +8,7 @@ import { feesAPI } from "./api/feesAPI";
 import { seatAPI } from "./api/seatAPI";
 import { adminApi } from "./api/adminApi";
 import { adminReducer } from "./reducer/adminReducer";
+import { pdfAPI } from "./api/pdfAPI";
 // import { cartReducer } from "./reducer/cartReducer";
 // import { orderApi } from "./api/orderAPI";
 // import { dashboardApi } from "./api/dashboardAPI";
@@ -23,6 +24,7 @@ export const store = configureStore({
     [enquiryAPI.reducerPath]: enquiryAPI.reducer,
     [feesAPI.reducerPath]: feesAPI.reducer,
     [seatAPI.reducerPath]: seatAPI.reducer,
+    [pdfAPI.reducerPath]: pdfAPI.reducer,
     // [orderApi.reducerPath]: orderApi.reducer,
     // [dashboardApi.reducerPath]: dashboardApi.reducer,
     [userReducer.name]: userReducer.reducer,
@@ -38,6 +40,7 @@ export const store = configureStore({
     enquiryAPI.middleware,
     feesAPI.middleware,
     seatAPI.middleware,
+    pdfAPI.middleware,
     // orderApi.middleware,
     // dashboardApi.middleware,
   ],
