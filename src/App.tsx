@@ -25,7 +25,8 @@ import UserAttendanceManagement from './pages/users/management/attendancemanagem
 import AdminLogin from './pages/adminLogin';
 import { getAdmin } from './redux/api/adminApi';
 import { adminExist, adminNotExist } from './redux/reducer/adminReducer';
-import PdfButton from './pages/pdf';
+import Pdf from './pages/admin/management/pdf/pdf';
+import FeesManagement from './pages/admin/management/feesmanagement';
 
 const Home = lazy(() => import("./pages/home"));
 const Login = lazy(() => import("./pages/login"));
@@ -106,13 +107,11 @@ const App = () => {
   return (
     <Router>
       <Header user={user} admin={admin}/>
-      <PdfButton/>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
-         
+          <Route path="/pdf" element={<Pdf/>} />
           <Route>
-
             <Route path="/login" element={
               <ProtectedRoute isAuthenticated={user ? false : true}>
                 <Login />
@@ -156,6 +155,7 @@ const App = () => {
             <Route path="/admin/student/:id" element={<StudentManagement />} />
             <Route path="/admin/seats/new" element={<SeatsManagement />} />
             <Route path="/admin/attendance/:id" element={<AttendanceManagement />} />
+            <Route path="/admin/fees/:id" element={<FeesManagement />} />
           </Route>
           <Route
             element={

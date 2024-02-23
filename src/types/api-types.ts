@@ -73,6 +73,14 @@ export type AllFeesResponse = {
   success: boolean;
   currentFees: Fees[];
 };
+export type UserFeesResponse = {
+  success: boolean;
+  currentFees: Fees;
+};
+export type UserFeesRequest = {
+  _id: string;
+  adminId: string;
+};
 export type AllEnquiryResponse = {
   success: boolean;
   enquiries: Enquiry[];

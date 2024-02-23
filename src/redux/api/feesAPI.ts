@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import {  AllFeesResponse,  } from "../../types/api-types";
+import {  AllFeesResponse, UserFeesRequest, UserFeesResponse,  } from "../../types/api-types";
 
 export const feesAPI = createApi({
     reducerPath: "feesAPI",
@@ -15,9 +15,15 @@ export const feesAPI = createApi({
                 method: "GET",
             }),
         }),
+        getUserFees: builder.query<UserFeesResponse, UserFeesRequest>({
+            query: ({_id,adminId}) => ({
+                url: `${_id}?id=${adminId}`,
+                method: "GET",
+            }),
+        }),
     })
 
 })
 
 
-export const { useGetFeesQuery } = feesAPI;
+export const { useGetFeesQuery,useGetUserFeesQuery } = feesAPI;

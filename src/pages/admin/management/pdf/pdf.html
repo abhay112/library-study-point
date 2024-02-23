@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+            padding: 2rem;
+        }
+        .header {
+            color: rgb(205, 25, 25);
+            font-size: 36px;
+        }
+        .content-div {
+            display: flex;
+            margin: 0.4rem 0;
+        }
+        .underline-p {
+            flex: 1;
+            border-bottom: 1px dotted grey;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="container-header">
+            <p class="header">Payment Receipt</p>
+            <p>No.<span>{no}</span></p>
+            <p>Library Name</p>
+            <p>{Library Name}</p>
+        </div>
+        <p> <span class="simple-text">Address</span> <span class="underline-span">{address}</span></p>
+        <div class="content-div">
+            <p><span>Received From: </span></p>
+            <p class="underline-p"><span>{library Name}</span></p>
+        </div>
+        <div class="content-div">
+            <p><span>Amount:</span></p>
+            <p class="underline-p"><span> {Amount}</span></p>
+        </div>
+        <div class="content-div">
+            <p><span>For:</span></p>
+            <p class="underline-p"><span>{for}</span></p>
+        </div>
+        <div class="content-div">
+            <p><span>Received By: </span></p>
+            <p class="underline-p"><span>{Received By}</span></p>
+        </div>
+    </div>
+
+</body>
+
+</html>
