@@ -67,7 +67,7 @@ const FeesPage = () => {
   }
 
   useEffect(() => {
-    console.log("Data:", data);
+    console.log("Data:", data?.currentFees,'fees');
     if (data) {
       setRows(
         data?.currentFees?.map((val) => ({

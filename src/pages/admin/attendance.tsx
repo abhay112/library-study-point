@@ -82,7 +82,7 @@ const Attendance = () => {
             name: val?.studentName.split(' ')[0] || "",
             day: val?.latestAttendance?.day || "",
             seat: typeof val?.latestAttendance?.seatNumber === "number" ? val.latestAttendance.seatNumber : 0, 
-            status: val?.latestAttendance?.isPresent === "Present" ? <span className="green">Present</span> : val?.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> : <span className="red">Absent</span>,
+            status: (val?.latestAttendance?.isPresent === "Present"||val.latestAttendance?.isPresent === "Exit") ? <span className="green">Present</span> : val?.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> :<span className="red">Absent</span>,
             action: val?.latestAttendance?.isPresent === "Pending" ?
               <Link to={`/admin/attendance`}
                 onClick={() => { updateHandler(val?.adminId, val?.studentId) }} >Accept

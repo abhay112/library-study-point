@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import {  AllFeesResponse, UserFeesRequest, UserFeesResponse,  } from "../../types/api-types";
+import {  AllFeesResponse, MessageResponse, UpdateFeesRequest, UserFeesRequest, UserFeesResponse,  } from "../../types/api-types";
 
 export const feesAPI = createApi({
     reducerPath: "feesAPI",
@@ -21,9 +21,16 @@ export const feesAPI = createApi({
                 method: "GET",
             }),
         }),
+        submitDueFees:builder.mutation<MessageResponse,UpdateFeesRequest>({
+            query: ({ feesId }) => ({
+                url: `/${feesId}`,
+                method: "PUT",
+            }),
+            invalidatesTags: ["fees"],
+        })
     })
 
 })
 
 
-export const { useGetFeesQuery,useGetUserFeesQuery } = feesAPI;
+export const { useGetFeesQuery,useGetUserFeesQuery,useSubmitDueFeesMutation } = feesAPI;

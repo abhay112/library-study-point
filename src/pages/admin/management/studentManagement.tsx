@@ -146,12 +146,15 @@ const StudentManagement = () => {
             </div>
             <div>
               <label>Shift</label>
-              <input
-                type="text"
-                placeholder="Shift"
-                value={shiftUpdate}
-                onChange={(e) => setShiftUpdate(e.target.value)}
-              />
+                <select
+                  value={shiftUpdate}
+                  onChange={(e) => setShiftUpdate(e.target.value)}
+                >
+                <option value="morning">Morning</option>
+                <option value="evening">Evening</option>
+                <option value="fullday">Full Day</option>
+                <option value="twentyfour">24 Hour</option>
+              </select>
             </div>
             <div>
               <label>Fees</label>
@@ -162,7 +165,7 @@ const StudentManagement = () => {
                 onChange={(e) => setFeesUpdate(Number(e.target.value))}
               />
             </div>
-            <div>
+            <div className="select-box">
               <label>Active</label>
               <select
                 value={activeUpdate ? "enrolled" : "inactive"}

@@ -13,6 +13,7 @@ import {
   Fees,
   AttendanceFormData,
   AttendanceDetails,
+  StudentTodayAttendanceDetails,
   SeatLayout,
   Admin,
 } from "./types";
@@ -41,6 +42,10 @@ export type SingleAttendaceResponse = {
   success: boolean;
   data: AttendanceDetails;
 };
+export type StudentTodayAttendanceAndSeatNumberResponse={
+  success:boolean;
+  data:StudentTodayAttendanceDetails;
+}
 
 export type AllUsersResponse = {
   success: boolean;
@@ -75,7 +80,7 @@ export type AllFeesResponse = {
 };
 export type UserFeesResponse = {
   success: boolean;
-  currentFees: Fees;
+  fees: Fees;
 };
 export type UserFeesRequest = {
   _id: string;
@@ -98,6 +103,12 @@ export type UpdatetEnquiryRequest = {
 export type UpdateAttendanceRequest = {
   adminId: string;
   studentId: string;
+};
+export type UpdateCheckOutLibraryRequest = {
+  studentId: string;
+};
+export type UpdateFeesRequest = {
+  feesId: string;
 };
 
 export type CreateAttendanceRequest = {

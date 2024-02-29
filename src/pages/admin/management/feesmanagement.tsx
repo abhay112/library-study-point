@@ -1,136 +1,114 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactElement, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Column } from "react-table";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import TableHOC from "../../../components/admin/TableHOC";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { useGetSingleStudentAllAttendaceQuery } from "../../../redux/api/attendanceAPI";
-import { Skeleton } from "../../../components/loader";
-import { CustomError } from "../../../types/api-types";
-import toast from "react-hot-toast";
-import { useGetUserFeesQuery } from "../../../redux/api/feesAPI";
+import { useGetUserFeesQuery, useSubmitDueFeesMutation } from "../../../redux/api/feesAPI";
+import { responseToast } from "../../../utils/features";
 
 interface DataType {
-  inTiming?: ReactElement;
-  outTiming?: string;
-  day: string;
-  seat: number | ReactElement;
-  status: ReactElement;
-  action: ReactElement;
+  amount?: string;
+  date?: string;
+  feesStatus?: ReactElement;
+  month?:string;
+  shift?: string;
+  year?: number;
 }
-interface AttendanceEntry {
-  day: string | null;
-  idx1: number | null;
-  idx2: number | null;
-  isPresent: "Present" | "Not Present" | "Pending" | null;
-  seatNumber: number | null;
+interface FeesEntry {
+  amount: string | null;
+  date: string | null;
+  feesStatus:string | null;
+  month: string | null;
+  shift: string | null;
+  year: number | null;
 }
 
-const img2 = "https://toppng.com/uploads/preview/cool-avatar-transparent-image-cool-boy-avatar-11562893383qsirclznyw.png";
 
 const columns: Column<DataType>[] = [
   {
-    Header: "Day",
-    accessor: "day",
+    Header: "Amount",
+    accessor: "amount",
   },
   {
-    Header: "Seat",
-    accessor: "seat",
+    Header: "Date",
+    accessor: "date",
+  },
+
+  {
+    Header: "Month",
+    accessor: "month",
   },
   {
-    Header: "In-Timing",
-    accessor: "inTiming",
+    Header: "Shift",
+    accessor: "shift",
   },
   {
-    Header: "Out-Timimg",
-    accessor: "outTiming",
+    Header: "Year",
+    accessor: "year",
   },
   {
-    Header: "Status",
-    accessor: "status",
-  },
-  {
-    Header: "Action",
-    accessor: "action",
+    Header: "Fees Status",
+    accessor: "feesStatus",
   },
 ];
 
 const FeesManagement = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const studentId = location.pathname.split('/').pop() || '';
   const { admin } = useSelector((state: RootState) => state.adminReducer);
   const adminId = admin?._id ||"";
-  const { data:feesData } = useGetUserFeesQuery({_id:studentId,adminId:adminId});
-  console.log(feesData);
-  const { isLoading, isError, error, data, refetch } = useGetSingleStudentAllAttendaceQuery({ adminId:adminId, studentId: studentId });
-  const updateHandler = async (adminId: string, studentId: string) => {
-    console.log(adminId,studentId);
-    refetch();
-  };
+  const { data } = useGetUserFeesQuery({_id:studentId,adminId:adminId},{ refetchOnMountOrArgChange: true });
+  const [submitDueFees] = useSubmitDueFeesMutation();
+  let studentName: string ="";
+  if (data && Array.isArray(data.fees)) {
+    studentName = data.fees[0]?.studentName;
+  }
+  const handleSubmitFees=async()=>{
+    let feesId ;
+    if (data && Array.isArray(data.fees)) {
+      feesId = data.fees[0]?._id;
+    }
+    const confirmed = window.confirm(`are you sured to submit ${studentName} his fees`);
+    if (confirmed) {
+      const res = await submitDueFees({feesId});
+      responseToast(res, navigate, "/admin/fees");
+    }
+  }
+  
   const [rows, setRows] = useState<DataType[]>([]);
-  console.log(data);
   const Table = TableHOC<DataType>(
     columns,
     rows,
     "dashboard-product-box",
-    data?.data?.studentName || "",
+    studentName?studentName:"",
     rows.length > 6
   )();
-
   useEffect(() => {
-    if (data) {
-      if (Array.isArray(data.data.attendance)) {
-        const attendance: AttendanceEntry[] = data.data.attendance || [];
-        console.log(data.data.attendance)
-        console.log(attendance)
-        setRows(
-          attendance.map((entry) => ({
-            photo: <img src={img2} alt="Shoes" />,
-            name: data.data.studentName || "",
-            day: entry.day || "",
-            seat: entry.seatNumber || <span className="grey">----</span>,
-            status: entry.isPresent === "Present" ? (
-              <span className="green">Present</span>
-            ) : entry.isPresent === "Pending" ? (
-              <span className="purple">Pending</span>
-            ) : (
-              <span className="red">Absent</span>
-            ),
-            action: entry.isPresent === "Pending" ? (
-              <Link
-                to={`/admin/attendance`}
-                onClick={() => {
-                  updateHandler(data?.data?.adminId || "", data?.data?.studentId || "");
-                }}
-              >
-                Accept
-              </Link>
-            ) : (
-              <Link
-                to={{
-                  pathname: `/admin/attendance/${data.data.studentId}`,
-                }}
-              >
-                Manage
-              </Link>
-            ),
-          }))
-        );
-      }
-     
+  if (data) {
+    if (Array.isArray(data.fees)) {
+      const fees: FeesEntry[] = data.fees[0]?.fees || [];
+      setRows(
+        fees.map((entry) => ({
+          amount: entry.amount || "",
+          date: entry.date || "",
+          feesStatus: entry?.feesStatus? <Link to="#">Submitted</Link>: <button onClick={handleSubmitFees}>Due</button>,
+          month: entry.month || "",
+          shift: entry.shift || "",
+          year: entry.year || 0,
+        }))
+      );
     }
-  }, [data]);
-  if (isError) {
-    const err = error as CustomError;
-    toast.error(err.data.message);
   }
+}, [data]);
+
   return (
     <div className="admin-container">
       <AdminSidebar />
-      {isLoading ? <Skeleton length={20} /> : Table}
+      {Table}
+      {/* {isLoading ? <Skeleton length={20} /> : Table} */}
     </div>
   );
 };

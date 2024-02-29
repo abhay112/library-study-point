@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { AllAttendanceResponse, MessageResponse, UpdateAttendanceRequest,GetAttendanceRequest, CreateAttendanceRequest, SingleAttendaceResponse } from "../../types/api-types";
+import { AllAttendanceResponse, MessageResponse, UpdateAttendanceRequest, GetAttendanceRequest, CreateAttendanceRequest, SingleAttendaceResponse, StudentTodayAttendanceAndSeatNumberResponse, UpdateCheckOutLibraryRequest } from "../../types/api-types";
 
 export const attendanceAPI = createApi({
     reducerPath: "attendanceAPI",
@@ -11,21 +11,33 @@ export const attendanceAPI = createApi({
     endpoints: (builder) => ({
         getAttendance: builder.query<AllAttendanceResponse, string>({
             query: (adminId) => ({
-                url: `getAllStudentTodayAttendace?id=${adminId}`,
+                url: `getAllStudentTodayAttendace?id=${adminId}`, // this will return all attendance present,pending,notpresent
+                method: "GET",
+            }),
+        }),
+        getTodayAttendance: builder.query<AllAttendanceResponse, string>({ 
+            query: (adminId) => ({
+                url: `getPresentStudent?id=${adminId}`, // this will return present and exit student
                 method: "GET",
             }),
         }),
         getSingleStudentAllAttendace: builder.query<SingleAttendaceResponse, GetAttendanceRequest>({
-            query: ({studentId,adminId}) => ({
+            query: ({ studentId, adminId }) => ({
                 url: `${studentId}?id=${adminId}`,
                 method: "GET",
             }),
         }),
-        createNewStudentAttendance:builder.mutation<MessageResponse,CreateAttendanceRequest>({
-            query: ({ studentId,formData }) => ({
+        getStudentTodayAttendanceAndSeatNumber: builder.query<StudentTodayAttendanceAndSeatNumberResponse, string>({
+            query: ( studentId) => ({
+                url: `isPresent/${studentId}`,
+                method: "GET",
+            }),
+        }),
+        createNewStudentAttendance: builder.mutation<MessageResponse, CreateAttendanceRequest>({
+            query: ({ studentId, formData }) => ({
                 url: `/${studentId}`,
                 method: "POST",
-                body:formData,
+                body: formData,
             }),
             invalidatesTags: ["attendance"],
         }),
@@ -36,9 +48,24 @@ export const attendanceAPI = createApi({
             }),
             invalidatesTags: ["attendance"],
         }),
+        checkOutFromLibrary: builder.mutation<MessageResponse, UpdateCheckOutLibraryRequest>({
+            query: ({ studentId }) => ({
+                url: `checkOut/${studentId}`,
+                method: "PUT",
+            }),
+            invalidatesTags: ["attendance"],
+        }),
     })
 
 })
 
 
-export const { useGetAttendanceQuery, useCreateNewStudentAttendanceMutation, useUpdateAttendanceMutation,useGetSingleStudentAllAttendaceQuery } = attendanceAPI;
+export const
+    { useGetAttendanceQuery,
+        useGetTodayAttendanceQuery,
+        useCreateNewStudentAttendanceMutation,
+        useUpdateAttendanceMutation,
+        useGetSingleStudentAllAttendaceQuery,
+        useGetStudentTodayAttendanceAndSeatNumberQuery,
+        useCheckOutFromLibraryMutation,
+    } = attendanceAPI;

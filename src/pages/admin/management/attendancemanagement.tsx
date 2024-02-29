@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactElement, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Column } from "react-table";
@@ -13,7 +11,7 @@ import { CustomError } from "../../../types/api-types";
 import toast from "react-hot-toast";
 
 interface DataType {
-  inTiming?: ReactElement;
+  inTiming?: string;
   outTiming?: string;
   day: string;
   seat: number | ReactElement;
@@ -24,11 +22,12 @@ interface AttendanceEntry {
   day: string | null;
   idx1: number | null;
   idx2: number | null;
-  isPresent: "Present" | "Not Present" | "Pending" | null;
+  isPresent: "Present" | "Not Present" | "Pending" |"Exit"| null;
   seatNumber: number | null;
+  checkIn:string |null;
+  checkOut:string|null;
 }
 
-const img2 = "https://toppng.com/uploads/preview/cool-avatar-transparent-image-cool-boy-avatar-11562893383qsirclznyw.png";
 
 const columns: Column<DataType>[] = [
   {
@@ -40,11 +39,11 @@ const columns: Column<DataType>[] = [
     accessor: "seat",
   },
   {
-    Header: "In-Timing",
+    Header: "CheckIn",
     accessor: "inTiming",
   },
   {
-    Header: "Out-Timimg",
+    Header: "CheckOut",
     accessor: "outTiming",
   },
   {
@@ -62,13 +61,11 @@ const AttendanceManagement = () => {
   const studentId = location.pathname.split('/').pop() || '';
   const { admin } = useSelector((state: RootState) => state.adminReducer);
   const adminId = admin?._id ||"";
-  const { isLoading, isError, error, data, refetch } = useGetSingleStudentAllAttendaceQuery({ adminId:adminId, studentId: studentId });
-
-  const updateHandler = async (adminId: string, studentId: string) => {
-    console.log(adminId,studentId);
-    refetch();
-  };
-
+  const { isLoading, isError, error, data } = useGetSingleStudentAllAttendaceQuery({ adminId:adminId, studentId: studentId }, { refetchOnMountOrArgChange: true });
+  // const updateHandler = async (adminId: string, studentId: string) => {
+  //   console.log(adminId,studentId);
+  //   refetch();
+  // };
   const [rows, setRows] = useState<DataType[]>([]);
   console.log(data);
   const Table = TableHOC<DataType>(
@@ -87,35 +84,14 @@ const AttendanceManagement = () => {
         console.log(attendance)
         setRows(
           attendance.map((entry) => ({
-            photo: <img src={img2} alt="Shoes" />,
             name: data.data.studentName || "",
             day: entry.day || "",
+            inTiming:entry?.checkIn?entry?.checkIn:"",
+            outTiming:entry?.checkOut?entry?.checkOut:"",
             seat: entry.seatNumber || <span className="grey">----</span>,
-            status: entry.isPresent === "Present" ? (
-              <span className="green">Present</span>
-            ) : entry.isPresent === "Pending" ? (
-              <span className="purple">Pending</span>
-            ) : (
-              <span className="red">Absent</span>
-            ),
-            action: entry.isPresent === "Pending" ? (
-              <Link
-                to={`/admin/attendance`}
-                onClick={() => {
-                  updateHandler(data?.data?.adminId || "", data?.data?.studentId || "");
-                }}
-              >
-                Accept
-              </Link>
-            ) : (
-              <Link
-                to={{
-                  pathname: `/admin/attendance/${data.data.studentId}`,
-                }}
-              >
-                Manage
-              </Link>
-            ),
+            status: (entry.isPresent === "Present"||  entry.isPresent === "Exit") ? (<span className="green">Present</span>) : entry.isPresent === "Pending" ? (<span className="purple">Pending</span>) :(<span className="red">Absent</span>),
+            action:  <Link to={{ pathname: `/admin/student/${data.data.studentId}`}}>Manage</Link>
+               
           }))
         );
       }

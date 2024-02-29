@@ -1,7 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { MdOutlineDoneOutline } from "react-icons/md";
-import AdminSidebar from "../../../components/admin/AdminSidebar";
+import { useNavigate } from "react-router-dom";
 import { useCreateSeatMutation, useGetSeatLayoutQuery } from "../../../redux/api/seatAPI";
 import { responseToast } from "../../../utils/features";
 import { useSelector } from "react-redux";
@@ -43,10 +41,8 @@ const SeatsManagement = () => {
             setColumns(data?.data?.columns)
         }
         seatingArrangement();
-    }, [rows, columns, data]);
-    useEffect(() => {
+    }, [rows, columns]);
 
-    }, [data]);
     const createSquares = () => {
         if (!matrix.length || !gridColors.length) return null;
         const html: JSX.Element[] = [];
@@ -91,7 +87,7 @@ const SeatsManagement = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const newGridColors = matrix?.map((row) =>
-            row.map((value) => (value > 0 ? "red" : "white"))
+            row.map((value) => (value > 0 ? "white" : "white"))
         );
         setGridColors(newGridColors);
         console.log(newGridColors);
@@ -124,8 +120,8 @@ const SeatsManagement = () => {
                                 className="seat"
                                 onClick={() => handleGetSeatStatus(i, j)}
                             >{matrix[i][j]}</p>
-                        ) : matrix[i][j] == 999 ? 
-                            <p className="gate">G</p> : 
+                        ) : matrix[i][j] == 999 ?
+                            <p className="gate">G</p> :
                             <p className="empty"></p>}
                     </div>
                 );
@@ -140,46 +136,51 @@ const SeatsManagement = () => {
     };
 
     const handleGetSeatStatus = (row: number, col: number) => {
-        // Update seat status or perform any other action here
         console.log(`Seat at row ${row}, column ${col} clicked`);
     };
     // console.log(matrix);
-    console.log(data, 'seats');
-    console.log(submitted, 'seats');
-    console.log(matrix, 'seats');
+    console.log(data, 'data');
+    console.log(submitted, 'submitted');
+    console.log(matrix, 'matrix');
     return (
-        <div className="admin-container">
-            <AdminSidebar />
+        <div className="seat-management-container">
             {!isLoading &&
                 <main className="seat-page">
-                    {/* <SeatLayoutHOC gatePosition={"bottom"}> */}
                     <div className="seats-layout">
                         <div className="page-wrapper">
                             <div className="create-seats-layout">
                                 {
-                                    !submitted && <div>
-                                        <input
-                                            type="number"
-                                            value={rows === "" ? "" : String(rows)}
-                                            onChange={(e) => {
-                                                setMatrix([]);
-                                                setGridColors([]);
-                                                setColumns("");
-                                                setRows(e.target.value === "" ? "" : parseInt(e.target.value, 10));
-                                            }}
-                                            min="1"
-                                            placeholder="Enter number of rows"
-                                        />
-                                        <input
-                                            type="number"
-                                            value={columns === "" ? "" : String(columns)}
-                                            onChange={(e) => setColumns(e.target.value === "" ? "" : parseInt(e.target.value, 10))}
-                                            min="1"
-                                            placeholder="Enter number of columns"
-                                        />
+                                    !submitted && <div className="create-seats-layout-box">
+                                        <div>
+                                            <label>Row</label>
+                                            <input
+                                                className="seat-inp-box"
+                                                type="number"
+                                                value={rows === "" ? "" : String(rows)}
+                                                onChange={(e) => {
+                                                    setMatrix([]);
+                                                    setGridColors([]);
+                                                    setColumns("");
+                                                    setRows(e.target.value === "" ? "" : parseInt(e.target.value, 10));
+                                                }}
+                                                min="1"
+                                                placeholder="Enter number of rows"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label>Column</label>
+                                            <input
+                                                className="seat-inp-box"
+                                                type="number"
+                                                value={columns === "" ? "" : String(columns)}
+                                                onChange={(e) => setColumns(e.target.value === "" ? "" : parseInt(e.target.value, 10))}
+                                                min="1"
+                                                placeholder="Enter number of columns"
+                                            />
+                                        </div>
+
                                     </div>
                                 }
-
                                 <div ref={boardRef} className="board">
                                     {!submitted && createSquares()}
                                 </div>
@@ -189,17 +190,22 @@ const SeatsManagement = () => {
                     </div>
                     {submitted && (
                         <div className="seating-arrangement">
-                            {seatingArrangement()}
+                            <div className="seat-box">
+                                {seatingArrangement()}
+                            </div>
                         </div>
                     )}
                     {/* {!submitted && <button type="submit" onClick={handleSubmit}>Submit</button>} */}
                     <form onSubmit={handleSubmit}>
-                        {!submitted && <button type="submit">Submit</button>}
+                        {!submitted && <button className="seat-submit-btn" type="submit">Submit</button>}
+                    </form>
+                    <form>
+                        {submitted && <button className="seat-submit-btn" type="submit" onClick={() => setSubmitted(!submitted)}>Edit</button>}
                     </form>
                 </main>}
-            {submitted && <Link to="/admin/seats/new" className="create-product-btn">
+            {/* {submitted && <Link to="/admin/seats/new" className="create-product-btn">
                 <MdOutlineDoneOutline onClick={() => setSubmitted(false)} />
-            </Link>}
+            </Link>} */}
 
         </div>
     );

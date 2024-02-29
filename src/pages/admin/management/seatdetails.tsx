@@ -4,7 +4,7 @@ import { Column } from "react-table";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import toast from "react-hot-toast";
-import { useGetAttendanceQuery, useUpdateAttendanceMutation } from "../../../redux/api/attendanceAPI";
+import { useGetTodayAttendanceQuery, useUpdateAttendanceMutation } from "../../../redux/api/attendanceAPI";
 import TableHOC from "../../../components/admin/TableHOC";
 import { Attendace } from "../../../types/types";
 import { CustomError } from "../../../types/api-types";
@@ -12,11 +12,17 @@ import { useGetFilledSeatLayoutQuery, useGetSeatLayoutQuery } from "../../../red
 import { FaEdit } from "react-icons/fa";
 import RefreshBtn from "../../../components/refreshBtn";
 import { Skeleton } from "../../../components/loader";
+import PopUpModal from "../modals/popup";
+import useModal from "../../../hooks/useModal";
+import SeatsManagement from "./seatmanagement";
+import gate from '../../../assets/gate.png'
 
 interface DataType {
   photo: ReactElement;
   name: string;
   seat: number;
+  checkin:string;
+  checkout:string;
   status: ReactElement;
   action: ReactElement;
 }
@@ -34,6 +40,14 @@ const attendanceColumns: Column<DataType>[] = [
     accessor: "name",
   },
   {
+    Header: "CheckIn",
+    accessor: "checkin",
+  },
+  {
+    Header: "CheckOut",
+    accessor: "checkout",
+  },
+  {
     Header: "Seat",
     accessor: "seat",
   },
@@ -49,8 +63,9 @@ const attendanceColumns: Column<DataType>[] = [
 
 const SeatDetails = () => {
   const { admin } = useSelector((state: RootState) => state.adminReducer);
-  const adminId = admin?._id||"";
-  const { isError, error, data: attendanceData, refetch: attendaceRefech,isLoading:isLoadingAttendace, } = useGetAttendanceQuery(adminId, { refetchOnMountOrArgChange: true });
+  const adminId = admin?._id || "";
+  const { isOpen, toggle } = useModal();
+  const { isError, error, data: attendanceData, refetch: attendaceRefech, isLoading: isLoadingAttendace, } = useGetTodayAttendanceQuery(adminId, { refetchOnMountOrArgChange: true });
   const [updateAttendance] = useUpdateAttendanceMutation();
   const [attendaceRows, setAttendaceRows] = useState<DataType[]>([]);
   const [rows, setRows] = useState<number | "">("");
@@ -58,9 +73,8 @@ const SeatDetails = () => {
   const [matrix, setMatrix] = useState<number[][]>([]);
   const boardRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const { data, refetch ,isLoading:isLoadingSeatLayout} = useGetSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
-  const {data:fetchSeat,refetch: filledSeatRefetch  } = useGetFilledSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
-  console.log(fetchSeat,data);
+  const { data, refetch, isLoading: isLoadingSeatLayout } = useGetSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
+  const { data: fetchSeat, refetch: filledSeatRefetch } = useGetFilledSeatLayoutQuery(adminId, { refetchOnMountOrArgChange: true });
   console.log(attendanceData)
   useEffect(() => {
     if (attendanceData && attendanceData.data) {
@@ -69,7 +83,9 @@ const SeatDetails = () => {
           photo: <img src={img2} alt="Shoes" />,
           name: val.studentName.split(' ')[0],
           seat: val.latestAttendance?.seatNumber ? val.latestAttendance?.seatNumber : 0, // Ensure seat is always a number
-          status: val.latestAttendance?.isPresent === "Present" ? <span className="green">Present</span> : val.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> : <span className="red">Absent</span>,
+          checkin:val.latestAttendance?.checkIn?val.latestAttendance?.checkIn:"NA",
+          checkout:val.latestAttendance?.checkOut?val.latestAttendance?.checkOut:"NA",
+          status: val.latestAttendance?.isPresent === "Present" ? <span className="green">Present</span> : val.latestAttendance?.isPresent === "Pending" ? <span className="purple">Pending</span> : val.latestAttendance?.isPresent === "Exit"? <span className="grey">Exit</span>:<span className="red">Absent</span>,
           action: val.latestAttendance?.isPresent === "Pending" ?
             <Link to={`/admin/seats`}
               onClick={() => { updateHandler(val.adminId, val.studentId) }} >Accept
@@ -113,16 +129,16 @@ const SeatDetails = () => {
     for (let i = 0; i < Number(rows); i++) {
       const row: JSX.Element[] = [];
       for (let j = 0; j < Number(columns); j++) {
-        const seat = filledSeats.find((seat: { idx1: number; idx2: number; }) => seat.idx1 === i && seat.idx2 === j);
+        const seat = filledSeats?.find((seat: { idx1: number; idx2: number; }) => seat?.idx1 === i && seat?.idx2 === j);
         const className = seat?.isPresent === 'Present' ? 'filled' : seat?.isPresent === 'Pending' ? 'pending' : '';
         row.push(
           <div key={j} className="square">
-            {matrix[i][j] !== 0 && matrix[i][j] !== 999 ? (
+            {matrix[i][j] && matrix[i][j] !== 0 && matrix[i][j] && matrix[i][j] !== 999 ? (
               <p
                 className={`seat ${className}`}
                 onClick={() => handleGetSeatStatus(i, j)}
               >{matrix[i][j]}</p>
-            ) : matrix[i][j] == 999 ? <p className="gate"></p> : <p className="empty"></p>}
+            ) : matrix[i][j] && matrix[i][j] == 999 ? <p className="gate"><img src={gate}/> </p> : <p className="empty"></p>}
           </div>
         );
       }
@@ -152,7 +168,7 @@ const SeatDetails = () => {
     attendanceColumns,
     attendaceRows,
     "dashboard-attendace-box",
-    "Attendance",
+    "Today Attendance",
     attendaceRows.length > 6
   )();
   const updateHandler = async (adminId: string, studentId: string) => {
@@ -168,13 +184,7 @@ const SeatDetails = () => {
     const err = error as CustomError;
     toast.error(err.data.message);
   }
-  // const [isRefreshing, setIsRefreshing] = useState(false);
-  // const handleBtnRefresh = () => {
-  //   setIsRefreshing(true);
-  //   setTimeout(() => {
-  //     setIsRefreshing(false);
-  //   }, 1000);
-  // };
+  console.log(submitted, isLoadingSeatLayout);
   const handleBtnRefresh = async () => {
     try {
       await refetch();
@@ -185,42 +195,69 @@ const SeatDetails = () => {
       console.error("Error refreshing seating arrangement:", error);
     }
   }
+
   return (
     <div className="seat-arrangement-page">
       <div className={`refresh`} onClick={handleBtnRefresh}>
         <RefreshBtn />
-    </div>
-    
-      {!data&&
-       <Link to="/admin/seats/new" >
+      </div>
+      {!data &&
+        <Link to="/admin/seats/new" >
           <FaEdit onClick={() => setSubmitted(false)} /> Create Seat Arrangement
-        </Link>}
+        </Link>
+      }
       {!isLoadingSeatLayout ?
         <main className="seat-continer">
           <div className="seat-page">
+            <h2 className="heading">Seat Layout</h2>
             <div className="seating-arrangement">
               {submitted && (
                 <div>
-                  <div>
+                  {/* <div>
                     <h2 className="heading heading-padding">Seating Arrangement</h2>
-                  
+                  </div> */}
+                  <div className="seat-box">
+                    {seatingArrangement()}
                   </div>
-                  {seatingArrangement()}
+                  <div className="footer-des">
+                    <div className="seat-details-header">
+                      <p>Seat Details</p>
+                    </div>
+                    <div className="seat-details-box-container">
+                      <div className="seat-details-box">
+                        <p className="seat-details-box-booked"></p>
+                        <label>Booked</label>
+                      </div>
+                      <div className="seat-details-box">
+                        <p className="seat-details-box-availble"></p>
+                        <label>Availble</label>
+                      </div>
+                      <div className="seat-details-box">
+                        <p className="seat-details-box-fixed"></p>
+                        <label>Fixed Seats</label>
+                      </div>
+                      <div className="seat-details-box">
+                        <p className="seat-details-box-gate"><img src={gate}/></p>
+                        <label>Gate</label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
           </div>
-          {isLoadingAttendace?<Skeleton length={10}/>:Table}
+          {isLoadingAttendace ? <Skeleton length={10} /> : Table}
         </main>
-        :<Skeleton length={10}/>}
+        : <Skeleton length={10} />}
       {
-        submitted && <Link to="/admin/seats/new" className="create-product-btn">
-          <FaEdit onClick={() => setSubmitted(false)} />
-        </Link>
+        submitted &&
+        <div>
+          <button className="create-product-btn" onClick={toggle}><FaEdit /></button>
+        </div>
       }
-      <div className="footer-des">
-        <p>color</p>
-      </div>
+      <PopUpModal isOpen={isOpen} toggle={toggle}>
+        <SeatsManagement />
+      </PopUpModal>
     </div>
   );
 };

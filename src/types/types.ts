@@ -42,8 +42,10 @@ export type Attendace = {
     day: string;
     idx1: number | null;
     idx2: number | null;
-    isPresent: "Present" | "Not Present" | "Pending";
+    isPresent: "Present" | "Not Present" | "Pending" | "Exit";
     seatNumber: number;
+    checkIn:string;
+    checkOut:string;
   };
   _id: string;
 };
@@ -56,10 +58,21 @@ export type AttendanceDetails = {
     day: string;
     idx1: number | null;
     idx2: number | null;
-    isPresent: "Present" | "Not Present" | "Pending";
+    isPresent: "Present" | "Not Present" | "Pending"| "Exit";
     seatNumber: number;
+    inTime:string;
+    outTime:string;
   };
   _id: string;
+}
+export type StudentTodayAttendanceDetails = {
+  day: string;
+  idx1: number | null;
+  idx2: number | null;
+  isPresent: "Present" | "Not Present" | "Pending"| "Exit";
+  seatNumber: number;
+  inTime:string;
+  outTime:string;
 }
 
 export interface AttendanceFormData {
@@ -72,15 +85,15 @@ export type Fees = {
   studentName: string;
   mobile:number;
   gender:string;
-  fees: {
-    date: string;
-    day: string;
-    month: string;
-    year: number;
-    amount: number;
-    feesStatus:boolean;
-    shift:string;
-  };
+  fees:{
+      date: string;
+      day: string;
+      month: string;
+      year: number;
+      amount: number;
+      feesStatus:boolean;
+      shift:string;
+    };
   _id: string;
 }
 
@@ -112,7 +125,7 @@ export type FilledSeat = {
   day: string;
   idx1: number;
   idx2: number;
-  isPresent: "Present" | "Not Present" | "Pending";
+  isPresent: "Present" | "Not Present" | "Pending"| "Exit";
   studentId: string;
   studentName: string;
   _id: string;

@@ -1,18 +1,21 @@
-@media screen and (width<= 1200px) {
+@media screen and (width<=1200px) {
   .admin-container {
     overflow: auto;
   }
 
   .dashboard {
+
     .widget-container,
     .graph-container,
     .transaction-container {
       justify-content: center;
       flex-wrap: wrap;
     }
+
     .graph-container {
       padding: 2rem;
     }
+
     .transaction-container {
       padding: 2rem;
       height: unset;
@@ -24,38 +27,42 @@
   }
 }
 
-@media screen and (width<= 1100px) {
+@media screen and (width<=1100px) {
   .admin-container {
     grid-template-columns: 1fr !important;
   }
+
   .seat-arrangement-page {
-    main{
+    main {
       flex-direction: column;
     }
   }
 }
 
 
-@media screen and (width<= 768px) {
+@media screen and (width<=768px) {
   .cart {
     display: block;
     padding: 2rem;
 
-    > main {
+    >main {
       width: 100%;
     }
-    > aside {
+
+    >aside {
       width: 100%;
     }
   }
 
   .cartitem {
     width: 100%;
-    > img {
+
+    >img {
       width: 3rem;
       height: 3rem;
     }
-    > div {
+
+    >div {
       flex-direction: column;
       gap: 0;
     }
@@ -65,138 +72,307 @@
     display: block;
     padding: 0;
 
-    > aside {
+    >aside {
       @include flex(row, space-between, center);
       flex-wrap: wrap;
       box-shadow: none;
-      > h2 {
+
+      >h2 {
         @include heading;
         font-size: 1.2rem;
       }
     }
-    > main > input {
+
+    >main>input {
       width: 100%;
       border: 1px solid rgba(212, 212, 212, 0.379);
     }
   }
 }
 
-@media screen and (width<= 600px) {
+@media screen and (width<=600px) {
   .landing-page {
     .section-01 {
       padding-top: 2rem !important;
       padding-bottom: 2rem !important;
     }
-    .section-02{
+
+    .section-02 {
       padding: 0rem !important;
       padding-bottom: 5rem !important;
       background: rgb(215, 215, 215);
     }
-    .section-03{
+
+    .section-03 {
       padding: 0rem !important;
       background: white;
-      .project{
 
-      }
+      .project {}
     }
-    .section-04{
+
+    .section-04 {
       padding: 0rem !important;
       background: rgb(215, 215, 215);
     }
-    .section-05{
+
+    .section-05 {
       padding: 0rem !important;
       padding-bottom: 5rem !important;
     }
   }
-  .slider-box{
-    .react-slick-box{
-    }
-    .slick-list, .slick-slider, .slick-track{
+
+  .slider-box {
+    .react-slick-box {}
+
+    .slick-list,
+    .slick-slider,
+    .slick-track {
       padding: 1rem 0 !important;
     }
-    .center .slick-center .project{
+
+    .center .slick-center .project {
       transform: scale(2) !important;
       opacity: 1 !important;
     }
-    
-    .center .project{
+
+    .center .project {
       opacity: 1 !important;
     }
   }
-  .izRqrf button{
+
+  .izRqrf button {
     right: -1rem !important;
   }
-  .izRqrf .back{
-    left:-1rem !important;
+
+  .izRqrf .back {
+    left: -1rem !important;
   }
+
   .product-management {
     flex-direction: column;
     align-items: center;
     padding: 0;
-    > section {
-      max-width: 400px;
+
+    >section {
+      max-width: 200px;
+      height: 30vh !important;
+      padding: 0 !important;
+    }
+    >article {
+      width: 80% !important;
+      padding: 1rem !important;
     }
   }
-  .admin-container{
-    >aside{
-      // width: 100% !important;
-      >div{
 
-      }
+  .admin-container {
+    >aside {
+
+      // width: 100% !important;
+      >div {}
     }
-    .seat-page{
-      background-color: white;
-      padding: 2rem;
-      overflow: auto;
-      height: 100%;
-      width: 100%;
-    }
+
   }
 
   .chart-container {
     padding: 0;
-    > h1 {
+
+    >h1 {
       margin: 0;
       text-align: center;
     }
-    > section {
+
+    >section {
       margin: 8rem auto;
     }
   }
 
-  .dashboard-app-container > section {
+  .dashboard-app-container>section {
+
     .coupon-form,
     .stopwatch {
       display: flex;
       flex-direction: column;
     }
+
     .stopwatch {
       align-items: center;
     }
   }
-   .seat-arrangement-page {
-    .refresh{
+
+  .seat-arrangement-page {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+    justify-content: flex-end !important;
+
+    .modal-overlay {
+      padding: 0 !important;
+      height: 120vh !important;
+
+      .modal-box {
+        width: 100% !important;
+        height: 100% !important;
+        padding: 1rem;
+        border-radius: 0rem !important;
+
+        .modal-close-btn {
+          font-size: 20px;
+          // margin-left: 5rem;
+          float: right;
+          position: fixed;
+          right: 2rem;
+          top: 4rem;
+          font-size: 0.8rem !important;
+
+        }
+
+        .modal-overlay-content {
+          display: flex;
+          margin-top: 5rem;
+          justify-content: center;
+        }
+      }
+
+      .seat-management-container {
+        padding: 0 !important;
+
+        .seat-page {
+          .seat-submit-btn {
+            padding: 0.5rem !important;
+          }
+
+          .create-seats-layout-box {
+            flex-direction: column !important;
+
+            div {
+              justify-content: space-between !important;
+            }
+          }
+        }
+      }
+    }
+
+    .refresh {
       .refresh-btn {
         button {
           width: 80px !important;
-          span{
+
+          span {
             padding: 5px !important;
             font-size: 10px;
-            &::after{
+
+            &::after {
               padding: 5px !important;
             }
           }
         }
       }
     }
-    main{
+
+    main {
       flex-direction: column;
-      .seat-page{
-        border-bottom:1px solid  rgb(0 0 0 / 36%);
+      padding-top: 1rem !important;
+      padding-bottom: 1rem !important;
+
+      .seat-page {
+        border-bottom: 1px solid rgb(0 0 0 / 36%);
         margin-bottom: 2rem;
+        padding-bottom: 2rem !important;
+
+        .seating-arrangement {
+          >div:first-child {
+            flex-direction: column-reverse !important;
+          }
+        }
+      }
+
+      .checkout-btn {
+        width: 80% !important;
+        
+      }
+      .dashboard-attendace-box{
+        width: max-content;
+        table{
+          tbody{
+            tr>td:nth-child(3) {
+              max-width: 70px !important;
+            }
+          }
+        }
+      }
+    }
+
+    .footer-des {
+      padding: 2rem;
+      padding-bottom: 0 !important;
+
+      .seat-details-header {
+        padding-bottom: 1rem;
+      }
+
+      .seat-details-box-container {
+        gap: 10px !important;
+        flex-wrap: wrap;
+        padding-bottom: 2rem;
+        // border-bottom: 1px solid #aeaeae;
       }
     }
   }
+
+  .seat-management-container {
+    .seat-page {
+      .seat-submit-btn {
+        margin-top: 1rem;
+        width: 50% !important;
+      }
+
+      .seats-layout {
+        .page-wrapper {
+          .create-seats-layout {
+            .create-seats-layout-box {
+              div {}
+
+              input.seat-inp-box {}
+
+            }
+
+            .board {}
+
+          }
+        }
+      }
+
+      .seating-arrangement {
+        >div:first-child {
+          flex-direction: column-reverse !important;
+        }
+
+        h2.heading-padding {}
+
+        .seat-box {
+
+          .grid-row {
+            .square {
+
+              img {}
+
+              p.empty {}
+
+              p.seat {}
+
+              p.seat.filled {}
+
+              p.seat.filled.highlighted-seat {}
+
+              p.seat.pending {}
+
+              p.gate {}
+            }
+          }
+        }
+      }
+    }
+  }
+
   .table {
     border-collapse: collapse;
     width: 100%;
@@ -228,6 +404,7 @@
         // padding: 0rem;
         font-size: 0.5rem;
         padding: 0rem 0.5rem;
+
         img {
           width: 1rem !important;
           height: 2rem;
@@ -256,15 +433,19 @@
           border-right: none;
         }
       }
-      tr > td:nth-child(3) { /* Select the third td element in each row */
+
+      tr>td:nth-child(3) {
+        /* Select the third td element in each row */
         width: 100px !important;
         max-width: 100px !important;
         overflow: scroll;
-        border-right: 1px solid rgba(0, 0, 0, 0.093);; 
+        border-right: 1px solid rgba(0, 0, 0, 0.093);
+        ;
         box-shadow: 1px 0px 1px rgba(0, 0, 0, 0.093);
       }
     }
   }
+
   .create-product-btn {
     position: fixed;
     right: 2rem;
@@ -274,8 +455,11 @@
     border-radius: 50%;
     background-color: rgb(201, 9, 9);
     color: rgb(248, 248, 248);
+
     &:hover {
       opacity: 0.8;
     }
   }
+
+
 }

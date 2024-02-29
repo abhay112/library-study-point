@@ -12,7 +12,7 @@ const NewStudent = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [mobile, setMobile] = useState<string>("");
-  const [shift, setShift] = useState<string>("");
+  const [shift, setShift] = useState<string>("morning");
   const [feesAmount, setFeesAmount] = useState<number | null>(null);
   const [photoPrev, setPhotoPrev] = useState<string>("");
   const [photo, setPhoto] = useState<File>();
@@ -97,12 +97,15 @@ const NewStudent = () => {
             </div>
             <div>
               <label>Shift</label>
-              <input
-                type="text"
-                placeholder="eg. Morning,Evening,Full Day etc"
-                value={shift}
-                onChange={(e) => setShift(e.target.value)}
-              />
+              <select
+                  value={shift}
+                  onChange={(e) => setShift(e.target.value)}
+                >
+                <option value="morning">Morning</option>
+                <option value="evening">Evening</option>
+                <option value="fullday">Full Day</option>
+                <option value="twentyfour">24 Hour</option>
+              </select>
             </div>
             <div>
               <label>Fees</label>
